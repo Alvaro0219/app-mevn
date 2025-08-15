@@ -8,7 +8,8 @@ const routes = [
     children: [
       { path: 'inicio', component: IndexPage },
       { path: 'productos', component: () => import('pages/ProductosPage.vue') },
-      { path: 'usuarios', component: () => import('pages/UsuariosPage.vue') },
+      { path: 'usuarios', name: 'usuarios', component: () => import('src/pages/UsersPage.vue') },
+      { path: 'usuarios/registrar', component: () => import('pages/auth/RegisterUsers.vue') },
       { path: 'reportes', component: () => import('pages/ReportesPage.vue') },
       { path: 'config', component: () => import('pages/ConfigPage.vue') },
     ]

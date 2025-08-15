@@ -123,7 +123,7 @@ const linksList = [
 .content-area {
   /* Fondo sutil con acentos de marca */
   background:
-    radial-gradient(1200px 600px at -10% -10%, rgba(108, 92, 231, 0.12), transparent 60%),
+    radial-gradient(1200px 600px at -10% -10%, rgba(108, 92, 231, 0.122), transparent 60%),
     radial-gradient(1000px 500px at 110% 110%, rgba(0, 194, 255, 0.10), transparent 55%);
   min-height: 100%;
   padding: 12px 0;

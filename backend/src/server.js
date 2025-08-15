@@ -1,10 +1,11 @@
-// backend/src/server.js
-const express = require('express');
-const cors = require('cors');
-const morgan = require('morgan');
-require('dotenv').config();
-const connectDB = require('./config/db');
+import express from 'express';
+import cors from 'cors';
+import morgan from 'morgan';
+import dotenv from 'dotenv';
+import userRoutes from './routes/userRoutes.js';
+import connectDB from './config/db.js';
 
+dotenv.config();
 const app = express();
 
 // Middlewares
@@ -13,12 +14,15 @@ app.use(express.json());
 app.use(morgan('dev'));
 
 // Conexión a la DB
-connectDB();
+await connectDB();
 
 // Rutas de prueba
 app.get('/', (req, res) => {
   res.json({ message: 'API funcionandooo 🚀' });
 });
+
+// Rutas de usuarios
+app.use('/users', userRoutes);
 
 // Escuchar puerto
 const PORT = process.env.PORT || 5000;
