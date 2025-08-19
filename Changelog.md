@@ -2,6 +2,26 @@
 
 Este documento explica de forma sencilla cómo funcionan y se relacionan los archivos que vamos modificando. Sirve como guía rápida del stack.
 
+## 2025-08-19 — Edición de usuarios y navegación unificada
+
+### Frontend
+
+- **`frontend/src/router/routes.js`**
+  - Cambio: se agrega ruta de edición `usuarios/editar/:id` con nombre `usuarios-editar` y se mantiene `usuarios` y `usuarios-registrar` con nombres explícitos.
+  - Orden: se reubicó `productos` luego de las rutas de usuarios (cambio no funcional, solo orden visual del archivo).
+
+- **`frontend/src/pages/UsersPage.vue`**
+  - Cambio: se agrega botón de edición (icono lápiz) en la columna Acciones.
+  - Navegación: se unifica el acceso a rutas usando navegación declarativa con `QBtn :to` en lugar de `$router.push()`/`useRouter`.
+  - Limpieza: se elimina `useRouter` y la función `goToEdit()` por quedar obsoletas.
+  - Fix: en la eliminación, se evita sombrear el ref `error` usando `catch (e)` y notificación con `error.value || e.message`.
+
+- **`frontend/src/pages/auth/EditUser.vue`** (nuevo)
+  - Nuevo formulario para editar usuario por ID.
+  - Carga: `fetchUserById(id)` en `onMounted` + `watch(user)` para poblar `form`.
+  - Guardado: `updateUser(id, form)` con notificaciones y redirección a la lista (`name: 'usuarios'`).
+  - Campos: `username`, `email`, `role`, `isActive`.
+
 ## 2025-08-12 — Navegación inicial, Home y configuración de API
 
 ### Frontend
@@ -41,38 +61,3 @@ Este documento explica de forma sencilla cómo funcionan y se relacionan los arc
   - Servidor Express con middlewares y conexión a MongoDB Atlas (`MONGO_URI`).
   - Ruta `GET /` devuelve `{ message: 'API funcionandooo 🚀' }`, usada por la Home.
   - Próximo: montar rutas REST para el módulo Usuarios: `app.use('/api/users', usersRoutes)`.
-
----
-
-## Cómo se comunican las piezas (flujo)
-
-1. **Router** (`routes.js`) decide qué página mostrar dentro del **Layout** (`MainLayout.vue`) mediante `<router-view />`.
-2. Las **Páginas** (ej. `IndexPage.vue`, `UsuariosPage.vue`) llaman a **Servicios** (`services/*.js`).
-3. Los **Servicios** usan la instancia **Axios** (`boot/axios.js` → `api`) que ya conoce la `VITE_API_URL` del backend.
-4. El **Backend** responde a las rutas (ej. `GET /`, `GET /api/users`), y el Frontend muestra los datos.
-5. Opcionalmente, un **Store Pinia** (`stores/*.js`) maneja estado y acciones compartidas entre componentes/páginas.
-
----
-
-## Tareas siguientes sugeridas (frontend)
-
-- Módulo Usuarios (inicial):
-  - `frontend/src/services/usersService.js`: `getAll`, `create`, `update`, `remove` usando `api`.
-  - `frontend/src/stores/users.js`: state (`list`, `loading`, `error`) y actions (`fetchUsers`, CRUD).
-  - `frontend/src/pages/UsuariosPage.vue`: `QTable` para listar y un botón “Nuevo Usuario”.
-
-## Tareas siguientes sugeridas (backend)
-
-- `backend/src/models/User.js`: esquema Mongoose (name, email único, role, status, timestamps).
-- `backend/src/controllers/users.controller.js`: `getAll`, `getById`, `create`, `update`, `remove`.
-- `backend/src/routes/users.routes.js`: monta las rutas y exporta el router de Express.
-- Montaje en `server.js`: `app.use('/api/users', usersRoutes)`.
-
----
-
-## Tips del stack
-
-- Variables de entorno en frontend: siempre con prefijo `VITE_` (acceso con `import.meta.env`).
-- Navegación Quasar: `QItem` entiende `:to` (vue-router). Usa `:active` para resaltar el ítem actual.
-- Lazy imports en rutas reducen el bundle inicial y cargan páginas bajo demanda.
-- Mantén la 404 (catch-all) para una UX clara ante rutas desconocidas.

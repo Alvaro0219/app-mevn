@@ -7,9 +7,10 @@ const routes = [
     component: MainLayout,
     children: [
       { path: 'inicio', component: IndexPage },
-      { path: 'productos', component: () => import('pages/ProductosPage.vue') },
       { path: 'usuarios', name: 'usuarios', component: () => import('src/pages/UsersPage.vue') },
-      { path: 'usuarios/registrar', component: () => import('pages/auth/RegisterUsers.vue') },
+      { path: 'usuarios/registrar', name: 'usuarios-registrar', component: () => import('pages/auth/RegisterUsers.vue') },
+      { path: 'usuarios/editar/:id', name: 'usuarios-editar', component: () => import('pages/auth/EditUser.vue') },
+      { path: 'productos', component: () => import('pages/ProductosPage.vue') },
       { path: 'reportes', component: () => import('pages/ReportesPage.vue') },
       { path: 'config', component: () => import('pages/ConfigPage.vue') },
     ]
