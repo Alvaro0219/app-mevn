@@ -2,7 +2,7 @@
   <q-page padding>
     <div class="row justify-between items-center q-mb-md">
       <div class="text-h5">LISTA DE USUARIOS</div>
-      <q-btn label="Registrar usuario" :to="{ name: 'usuarios-registrar' }" class="btn-registrar" />
+      <q-btn label="Registrar usuario" :to="{ name: 'usuarios-registrar' }" outline color="primary" no-caps />
     </div>
 
     <q-card>
@@ -17,7 +17,7 @@
           <q-td :props="props">
             <q-btn dense flat icon="edit" color="primary" class="q-mr-sm"
               :to="{ name: 'usuarios-editar', params: { id: props.row._id } }" />
-            <q-btn dense flat icon="delete" color="negative"
+            <q-btn dense flat icon="delete" color="primary"
               @click="confirmAndDelete(props.row._id)" />
           </q-td>
         </template>

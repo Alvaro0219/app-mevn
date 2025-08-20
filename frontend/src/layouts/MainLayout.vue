@@ -14,7 +14,7 @@
         />
 
         <q-toolbar-title>
-          SISTEMA DE GESTION
+          SISTEMA DE GESTIÓN
         </q-toolbar-title>
 
         <!-- Info derecha -->
@@ -26,7 +26,15 @@
     <!-- Menú lateral -->
     <q-drawer v-model="leftDrawerOpen" show-if-above bordered class="drawer--glass" dark>
       <q-list>
-        <q-item-label header> Menú de Navegación </q-item-label>
+        <q-item-label 
+          header 
+          class="menu-header"
+        >
+          Nombre de la Empresa
+          <div class="menu-subheader">
+            Menú de Navegación
+          </div>
+        </q-item-label>
 
         <q-item
           v-for="link in linksList"
@@ -84,7 +92,7 @@ const linksList = [
 
 <style scoped lang="scss">
 .header--brand {
-  background: linear-gradient(135deg, #6c5ce7 0%, #00c2ff 100%);
+  background: linear-gradient(135deg, #6c5ce7 0%, #0f172a 100%);
   box-shadow: 0 2px 12px rgba(0, 0, 0, 0.25);
 }
 
@@ -117,6 +125,25 @@ const linksList = [
 .caption-custom {
   color: #ffffff;
   font-style: italic;
+}
+
+/* Encabezado del menú lateral */
+.menu-header {
+  font-size: 1.25rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: var(--q-secondary);
+  letter-spacing: 1px;
+  padding-bottom: 1rem;
+  margin-bottom: 1rem;
+  border-bottom: 2px solid rgba(255, 255, 255, 0.2);
+}
+
+.menu-subheader {
+  font-size: 0.75rem;
+  font-weight: 400;
+  opacity: 0.8;
+  margin-top: 0.25rem;
 }
 
 /* Contenido general de páginas */

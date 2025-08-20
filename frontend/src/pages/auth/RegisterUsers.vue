@@ -2,12 +2,20 @@
     <q-page class="bg-gradient-to-br from-secondary to-primary q-pa-xl" style="min-height: 100vh;">
       <div class="row justify-center">
         <div class="col-12 col-sm-11 col-md-10 col-lg-10 col-xl-10">
+          <q-btn 
+            outline 
+            round 
+            icon="arrow_back" 
+            class="q-mb-md"
+            :to="{ name: 'usuarios' }"
+            aria-label="Volver"
+          />
           <q-card class="gym-card register-card q-pa-xl full-width">
           <q-card-section class="text-center q-pb-none">
             <div class="gym-logo q-mb-md">
-              <q-icon name="person_add" size="64px" color="secondary" />
+              <q-icon name="person_add" size="64px" color="primary" />
             </div>
-            <h4 class="text-h4 text-weight-bold text-secondary q-mt-none q-mb-sm">
+            <h4 class="text-h4 text-weight-bold text-primary q-mt-none q-mb-sm">
               Registrar Usuario
             </h4>
           </q-card-section>
@@ -61,7 +69,7 @@
                 ]"
               >
                 <template v-slot:prepend>
-                  <q-icon name="lock" color="secondary" />
+                  <q-icon name="lock" color="primary" />
                 </template>
                 <template v-slot:append>
                   <q-icon
@@ -75,7 +83,7 @@
   
               <q-btn
                 type="submit"
-                color="secondary"
+                outline color="primary" no-caps
                 label="Crear Cuenta"
                 class="full-width gym-btn q-mb-md"
                 size="lg"

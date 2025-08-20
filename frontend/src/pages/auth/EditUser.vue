@@ -2,9 +2,17 @@
   <q-page class="q-pa-xl" style="min-height: 100vh;">
     <div class="row justify-center">
       <div class="col-12 col-sm-10 col-md-8 col-lg-7 col-xl-6">
+        <q-btn 
+          outline 
+          round 
+          icon="arrow_back" 
+          class="q-mb-md"
+          :to="{ name: 'usuarios' }"
+          aria-label="Volver"
+        />
         <q-card class="q-pa-xl">
           <q-card-section class="text-center q-pb-none">
-            <h4 class="text-h4 text-weight-bold q-mt-none q-mb-sm">Editar Usuario</h4>
+            <h4 class="text-h4 text-weight-bold text-primary q-mt-none q-mb-sm">Editar Usuario</h4>
             <div class="text-grey-6 q-mb-lg">Modifica los datos y guarda los cambios</div>
           </q-card-section>
 
@@ -46,10 +54,10 @@
 
               <div class="row q-col-gutter-md">
                 <div class="col">
-                  <q-btn type="submit" color="primary" label="Guardar" class="full-width" :loading="loading" :disable="loading" />
+                  <q-btn type="submit" label="Guardar" class="full-width" outline color="primary" no-caps :loading="loading" :disable="loading" />
                 </div>
                 <div class="col">
-                  <q-btn flat color="grey-7" label="Cancelar" class="full-width" @click="router.push({ name: 'usuarios' })" />
+                  <q-btn label="Cancelar" class="full-width" outline color="gray7" no-caps @click="router.push({ name: 'usuarios' })" />
                 </div>
               </div>
             </q-form>
