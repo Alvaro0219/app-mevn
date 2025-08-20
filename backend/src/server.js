@@ -3,6 +3,7 @@ import cors from 'cors';
 import morgan from 'morgan';
 import dotenv from 'dotenv';
 import userRoutes from './routes/userRoutes.js';
+import authRoutes from './routes/authRoutes.js';
 import connectDB from './config/db.js';
 
 dotenv.config();
@@ -23,6 +24,9 @@ app.get('/', (req, res) => {
 
 // Rutas de usuarios
 app.use('/users', userRoutes);
+
+// Rutas de autenticación
+app.use('/auth', authRoutes);
 
 // Escuchar puerto
 const PORT = process.env.PORT || 5000;
