@@ -2,6 +2,48 @@
 
 Este documento explica de forma sencilla cómo funcionan y se relacionan los archivos que vamos modificando. Sirve como guía rápida del stack.
 
+## 2025-08-20 — Implementación de Autenticación JWT
+
+### Backend
+
+- **`backend/src/models/User.js`**
+  - Mejora: Se agregaron validaciones de campos (email, username, password).
+  - Nuevo: Se implementó encriptación de contraseñas con bcrypt.
+  - Nuevo: Se agregaron métodos para generar JWT y comparar contraseñas.
+  - Cambio: Se actualizó el esquema con campos adicionales para autenticación.
+
+- **`backend/src/middleware/auth.js`** (nuevo)
+  - Nuevo: Middleware `protect` para verificar tokens JWT.
+  - Nuevo: Middleware `authorize` para control de acceso por roles.
+  - Manejo de errores para rutas protegidas.
+
+- **`backend/src/controllers/authController.js`** (nuevo)
+  - Nuevo: Controlador con métodos para login, perfil y logout.
+  - Implementación de generación de tokens JWT.
+  - Validación de credenciales y manejo de sesiones.
+
+- **`backend/src/routes/authRoutes.js`** (nuevo)
+  - Nuevo: Rutas para autenticación (`/auth/login`, `/auth/me`, `/auth/logout`).
+  - Protección de rutas con middleware JWT.
+
+- **`backend/src/utils/errorResponse.js`** (nuevo)
+  - Nuevo: Clase personalizada para manejar respuestas de error consistentes.
+
+- **`backend/src/server.js`**
+  - Cambio: Se integraron las rutas de autenticación.
+  - Configuración de manejo de cookies para JWT.
+
+### Frontend
+
+- **`frontend/src/pages/auth/Login.vue`** (nuevo)
+  - Nuevo: Formulario de inicio de sesión.
+  - Integración con el backend para autenticación.
+  - Almacenamiento seguro del token JWT.
+
+- **`frontend/src/router/index.js`**
+  - Cambio: Se agregaron rutas protegidas.
+  - Implementación de navegación guardada para autenticación.
+
 ## 2025-08-19 — Edición de usuarios y navegación unificada
 
 ### Frontend
