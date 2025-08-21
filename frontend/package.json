@@ -2,7 +2,7 @@
   "name": "frontend",
   "version": "0.0.1",
   "description": "Proyecto MEVN",
-  "productName": "Sistema Base MEVN",
+  "productName": "Sistema De Gestión",
   "author": "<alvaro0219> <alvaroconti05@gmail.com>",
   "type": "module",
   "private": true,
