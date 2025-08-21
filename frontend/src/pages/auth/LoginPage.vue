@@ -5,7 +5,7 @@
           <q-card class="q-pa-lg" style="width: 100%; max-width: 400px;">
             <q-form @submit.prevent="handleLogin">
               <q-card-section>
-                <div class="text-h5 text-weight-bold text-center q-mb-md">Iniciar Sesión</div>
+                <div class="text-h5 text-weight-bold text-center q-mb-md text-primary">Iniciar Sesión</div>
                 <q-banner v-if="error" class="bg-negative text-white q-mb-md">
                   {{ error }}
                 </q-banner>
@@ -44,7 +44,7 @@
                 <q-btn
                   label="Ingresar"
                   type="submit"
-                  color="primary"
+                  outline color="primary" no-caps
                   class="full-width"
                   :loading="loading"
                 />

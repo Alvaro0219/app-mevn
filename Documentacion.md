@@ -72,14 +72,46 @@ La conexión con Atlas se establece al arrancar el backend; aunque la ruta `/` n
     - `quasar dev`
   - App en: URL que abre Quasar (por defecto `http://localhost:9000`).
 
-## Buenas prácticas y siguientes pasos
-- **Frontend**
-  - Inyectar `API_URL` correctamente: en `quasar.config.js > build.env` o usar `VITE_API_URL` y acceder vía `import.meta.env.VITE_API_URL`.
-  - Crear servicios específicos (p.ej. `usersService.js`) y stores Pinia en `src/stores/`.
-- **Backend**
-  - Agregar `models` Mongoose en `backend/src/models/`.
-  - Implementar `controllers` y `routes` en `backend/src/controllers/` y `backend/src/routes/`.
-  - Montar rutas en `backend/src/server.js` con prefijo (p.ej. `app.use('/api/users', usersRoutes)`).
-- **Seguridad**
-  - No exponer `.env` ni credenciales.
-  - Manejo de errores y logs consistentes.
+## Flujo de Autenticación
+
+### Backend
+- **Rutas de autenticación**: `backend/src/routes/authRoutes.js`
+  - `POST /auth/register`: Registro de nuevos usuarios
+  - `POST /auth/login`: Inicio de sesión (devuelve JWT)
+  - `POST /auth/logout`: Cierre de sesión
+  - `GET /auth/me`: Obtener información del usuario actual
+
+- **Seguridad**:
+  - Uso de JWT (JSON Web Tokens) para autenticación
+  - Middleware de autenticación en `backend/src/middleware/auth.js`
+  - Protección de rutas con `protect` middleware
+
+### Frontend
+- **Manejo de autenticación**: `frontend/src/composables/useAuth.js`
+  - Estado global de autenticación
+  - Funciones `login()`, `logout()`, `isAuthenticated()`, etc.
+  - Persistencia de sesión mediante `localStorage`
+
+- **Páginas de autenticación**:
+  - `LoginPage.vue`: Formulario de inicio de sesión
+  - `RegisterPage.vue`: Formulario de registro
+  - `MainLayout.vue`: Muestra el estado de autenticación y botón de cierre de sesión
+
+- **Protección de rutas**:
+  - Middleware de navegación en `frontend/src/router/index.js`
+  - Rutas protegidas con `meta: { requiresAuth: true }`
+  - Redirección a login si no autenticado
+
+### Flujo de Inicio de Sesión
+1. Usuario ingresa credenciales en `LoginPage.vue`
+2. Se llama a `login(credentials)` de `useAuth.js`
+3. Si es exitoso, se guarda el token JWT y los datos del usuario
+4. El token se envía en el header `Authorization` de todas las peticiones
+5. El usuario es redirigido a la ruta protegida
+
+### Flujo de Cierre de Sesión
+1. Usuario hace clic en "Cerrar Sesión" en `MainLayout.vue`
+2. Se llama a `logout()` de `useAuth.js`
+3. Se limpia el estado de autenticación
+4. Se elimina el token del almacenamiento local
+5. Se redirige al usuario a la página de login
