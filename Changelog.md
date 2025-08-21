@@ -2,6 +2,29 @@
 
 Este documento explica de forma sencilla cómo funcionan y se relacionan los archivos que vamos modificando. Sirve como guía rápida del stack.
 
+## 2025-08-21 — Implementación de Cierre de Sesión
+
+### Frontend
+
+- **`frontend/src/composables/useAuth.js`**
+  - Nueva función `logout()`: Maneja el cierre de sesión tanto en el frontend como en el backend.
+  - Mejora: Manejo robusto de errores y limpieza de estado local.
+  - Mejora: Envío automático del token en el header de autorización.
+
+- **`frontend/src/layouts/MainLayout.vue`**
+  - Implementación de botón de cierre de sesión en la barra superior.
+  - Visualización del nombre de usuario actual.
+  - Manejo de notificaciones para feedback al usuario.
+
+### Backend
+
+- **`backend/src/controllers/authController.js`**
+  - Nuevo controlador `logout` para manejar el cierre de sesión.
+  - Respuestas estandarizadas para el cliente.
+
+- **`backend/src/routes/authRoutes.js`**
+  - Nueva ruta POST `/auth/logout` para el cierre de sesión.
+
 ## 2025-08-20 — Implementación de Autenticación JWT
 
 ### Backend

@@ -54,16 +54,19 @@ export const getMe = async (req, res) => {
 // @desc    Cerrar sesión / Limpiar cookie
 // @route   GET /api/auth/logout
 // @access  Private
-export const logout = async (req, res) => {
+export const logout = (req, res) => {
     try {
-        // Enviar token expirado
-        res.cookie('token', 'none', {
-            expires: new Date(Date.now() + 10 * 1000),
-            httpOnly: true
-        });
-
-        res.json({ success: true, data: {} });
+      // Opcional: Aquí podrías invalidar el token si estás usando una lista negra
+      // Por ahora, simplemente devolvemos éxito
+      res.status(200).json({
+        success: true,
+        message: 'Sesión cerrada exitosamente'
+      });
     } catch (error) {
-        res.status(500).json({ message: error.message });
+      console.error('Error en logout:', error);
+      res.status(500).json({
+        success: false,
+        message: 'Error al cerrar sesión'
+      });
     }
-};
+  };

@@ -17,9 +17,19 @@
           SISTEMA DE GESTIÓN
         </q-toolbar-title>
 
-        <!-- Info derecha -->
+        <!-- Botón de usuario y logout -->
         <q-space />
-        <div class="user-chip"><q-icon name="person" size="18px" /> <span>Admin</span></div>
+        <div class="row items-center q-gutter-sm">
+          <span>{{ user?.username || 'Usuario' }}</span>
+          <q-btn
+            flat
+            round
+            dense
+            icon="logout"
+            @click="handleLogout"
+            title="Cerrar sesión"
+          />
+        </div>
       </q-toolbar>
     </q-header>
 
@@ -67,14 +77,36 @@
 
 <script setup>
 import { ref } from 'vue'
-import { useRoute } from 'vue-router'
+import { useRouter, useRoute } from 'vue-router'
+import { useQuasar } from 'quasar'
+import { useAuth } from 'src/composables/useAuth'
 
-const leftDrawerOpen = ref(false)
+const $q = useQuasar()
+const router = useRouter()
 const route = useRoute()
+const { user, logout } = useAuth()
+const leftDrawerOpen = ref(false)
 
-function toggleLeftDrawer() {
+const toggleLeftDrawer = () => {
   leftDrawerOpen.value = !leftDrawerOpen.value
 }
+
+const handleLogout = async () => {
+  try {
+    await logout();
+    $q.notify({
+      type: 'positive',
+      message: 'Sesión cerrada correctamente'
+    });
+    router.push('/login');
+  } catch (error) {
+    console.error('Error al cerrar sesión:', error);
+    $q.notify({
+      type: 'negative',
+      message: 'Error al cerrar sesión'
+    });
+  }
+};
 
 function isActive(to) {
   if (to === '/') return route.path === '/'
@@ -91,6 +123,16 @@ const linksList = [
 </script>
 
 <style scoped lang="scss">
+.q-toolbar__title {
+  font-size: 1.1rem;
+  font-weight: 500;
+}
+
+/* Asegúrate de que el botón sea visible en el header */
+.q-btn--round {
+  font-size: 1.1rem;
+}
+
 .header--brand {
   background: linear-gradient(135deg, #6c5ce7 0%, #0f172a 100%);
   box-shadow: 0 2px 12px rgba(0, 0, 0, 0.25);

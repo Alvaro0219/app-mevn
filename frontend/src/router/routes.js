@@ -1,24 +1,61 @@
 import MainLayout from 'layouts/MainLayout.vue'
-import IndexPage from 'pages/IndexPage.vue'
 
 const routes = [
   {
+    path: '/login',
+    name: 'login',
+    component: () => import('pages/auth/LoginPage.vue'),
+    meta: { requiresAuth: false }
+  },
+  {
     path: '/',
     component: MainLayout,
+    meta: { requiresAuth: true },
     children: [
-      { path: 'inicio', component: IndexPage },
-      { path: 'usuarios', name: 'usuarios', component: () => import('src/pages/UsersPage.vue') },
-      { path: 'usuarios/registrar', name: 'usuarios-registrar', component: () => import('pages/auth/RegisterUsers.vue') },
-      { path: 'usuarios/editar/:id', name: 'usuarios-editar', component: () => import('pages/auth/EditUser.vue') },
-      { path: 'productos', component: () => import('pages/ProductosPage.vue') },
-      { path: 'reportes', component: () => import('pages/ReportesPage.vue') },
-      { path: 'config', component: () => import('pages/ConfigPage.vue') },
+      { 
+        path: 'inicio', 
+        name: 'inicio',
+        component: () => import('pages/IndexPage.vue')
+      },
+      { 
+        path: 'usuarios', 
+        name: 'usuarios', 
+        component: () => import('pages/UsersPage.vue'),
+        meta: { roles: ['admin'] }
+      },
+      { 
+        path: 'usuarios/registrar', 
+        name: 'usuarios-registrar', 
+        component: () => import('pages/auth/RegisterUsers.vue'),
+        meta: { roles: ['admin'] }
+      },
+      { 
+        path: 'usuarios/editar/:id', 
+        name: 'usuarios-editar', 
+        component: () => import('pages/auth/EditUser.vue'),
+        meta: { roles: ['admin'] }
+      },
+      { 
+        path: 'productos', 
+        name: 'productos',
+        component: () => import('pages/ProductosPage.vue')
+      },
+      { 
+        path: 'reportes', 
+        name: 'reportes',
+        component: () => import('pages/ReportesPage.vue')
+      },
+      { 
+        path: 'config', 
+        name: 'config',
+        component: () => import('pages/ConfigPage.vue')
+      }
     ]
   },
   {
     path: '/:catchAll(.*)*',
-    component: () => import('pages/ErrorNotFound.vue'),
-  },
+    component: () => import('pages/ErrorNotFound.vue')
+  }
 ]
 
 export default routes
