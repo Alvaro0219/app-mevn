@@ -13,8 +13,8 @@
           @click="toggleLeftDrawer"
         />
 
-        <q-toolbar-title>
-          SISTEMA DE GESTIÓN
+        <q-toolbar-title class="row items-center">
+          <div>SISTEMA DE GESTIÓN</div>
         </q-toolbar-title>
 
         <!-- Botón de usuario y logout -->
@@ -36,15 +36,14 @@
     <!-- Menú lateral -->
     <q-drawer v-model="leftDrawerOpen" show-if-above bordered class="drawer--glass" dark>
       <q-list>
-        <q-item-label 
-          header 
-          class="menu-header"
-        >
-          Nombre de la Empresa
-          <div class="menu-subheader">
-            Menú de Navegación
-          </div>
-        </q-item-label>
+        <div class="text-center q-pa-md">
+          <img 
+            src="../assets/logo/logo.png" 
+            alt="Logo" 
+            style="height: 80px; margin-bottom: 10px;"
+            class="logo"
+          >
+        </div>
 
         <q-item
           v-for="link in linksList"
@@ -134,12 +133,12 @@ const linksList = [
 }
 
 .header--brand {
-  background: linear-gradient(135deg, #6c5ce7 0%, #0f172a 100%);
+  background: linear-gradient(145deg, #1976d2 0%, #0d47a1 100%);
   box-shadow: 0 2px 12px rgba(0, 0, 0, 0.25);
 }
 
 .drawer--glass {
-  background: rgba(17, 25, 40, 0.72);
+  background: rgba(13, 71, 161, 0.9);
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
   color: #e2e8f0;
@@ -186,6 +185,41 @@ const linksList = [
   font-weight: 400;
   opacity: 0.8;
   margin-top: 0.25rem;
+}
+
+/* Estilos para el logo */
+.logo {
+  transition: transform 0.3s ease;
+  object-fit: contain;
+}
+
+.logo:hover {
+  transform: scale(1.05);
+}
+
+/* Ajustes para el logo en la barra superior */
+.q-toolbar .logo {
+  max-height: 40px;
+  width: auto;
+}
+
+/* Ajustes para el logo en el menú lateral */
+.q-drawer .logo {
+  max-height: 80px;
+  width: auto;
+  margin: 0 auto;
+  display: block;
+}
+
+/* Ajustes responsivos */
+@media (max-width: 600px) {
+  .q-toolbar .logo {
+    max-height: 30px;
+  }
+  
+  .q-drawer .logo {
+    max-height: 60px;
+  }
 }
 
 /* Contenido general de páginas */

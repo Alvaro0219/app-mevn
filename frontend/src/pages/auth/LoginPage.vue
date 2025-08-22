@@ -4,13 +4,19 @@
         <q-page class="flex flex-center bg-grey-2">
           <q-card class="q-pa-lg" style="width: 100%; max-width: 400px;">
             <q-form @submit.prevent="handleLogin">
-              <q-card-section>
-                <div class="text-h5 text-weight-bold text-center q-mb-md text-primary">Iniciar Sesión</div>
+              <q-card-section class="text-center">
+                <img 
+                  src="../../assets/logo/logo.png" 
+                  alt="Logo" 
+                  style="height: 100px; margin: 0 auto 20px; display: block;"
+                  class="logo"
+                >
+                <div class="text-h5 text-weight-bold q-mb-md text-negative">Iniciar Sesión</div>
                 <q-banner v-if="error" class="bg-negative text-white q-mb-md">
                   {{ error }}
                 </q-banner>
               </q-card-section>
-  
+
               <q-card-section class="q-gutter-y-md">
                 <q-input
                   v-model="form.email"
