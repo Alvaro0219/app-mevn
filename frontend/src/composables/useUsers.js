@@ -1,5 +1,5 @@
 import { ref } from 'vue';
-import axios from 'axios';
+import { api } from 'boot/axios';
 
 export default function useUsers() {
   const users = ref([]);
@@ -7,14 +7,12 @@ export default function useUsers() {
   const loading = ref(false);
   const error = ref(null);
 
-  const API_URL = 'http://localhost:5000/users';
-
   // Obtener todos los usuarios
   const fetchUsers = async () => {
     loading.value = true;
     error.value = null;
     try {
-      const res = await axios.get(API_URL);
+      const res = await api.get('/users');
       users.value = res.data;
     } catch (err) {
       error.value = err.response?.data?.message || err.message;
@@ -28,7 +26,7 @@ export default function useUsers() {
     loading.value = true;
     error.value = null;
     try {
-      const res = await axios.get(`${API_URL}/${id}`);
+      const res = await api.get(`/users/${id}`);
       user.value = res.data;
     } catch (err) {
       error.value = err.response?.data?.message || err.message;
@@ -42,7 +40,7 @@ export default function useUsers() {
     loading.value = true;
     error.value = null;
     try {
-      const res = await axios.post(API_URL, data);
+      const res = await api.post('/users', data);
       users.value.push(res.data); // Agregar a la lista local
       return res.data;
     } catch (err) {
@@ -57,7 +55,7 @@ export default function useUsers() {
     loading.value = true;
     error.value = null;
     try {
-      const res = await axios.put(`${API_URL}/${id}`, data);
+      const res = await api.put(`/users/${id}`, data);
       // Actualiza localmente
       const index = users.value.findIndex(u => u._id === id);
       if (index !== -1) users.value[index] = res.data;
@@ -74,7 +72,7 @@ export default function useUsers() {
     loading.value = true;
     error.value = null;
     try {
-      await axios.delete(`${API_URL}/${id}`);
+      await api.delete(`/users/${id}`);
       users.value = users.value.filter(u => u._id !== id);
     } catch (err) {
       error.value = err.response?.data?.message || err.message;
