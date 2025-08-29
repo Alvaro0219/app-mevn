@@ -4,6 +4,7 @@ import morgan from 'morgan';
 import dotenv from 'dotenv';
 import userRoutes from './routes/userRoutes.js';
 import authRoutes from './routes/authRoutes.js';
+import productRoutes from './routes/productRoutes.js';
 import connectDB from './config/db.js';
 
 dotenv.config();
@@ -27,6 +28,9 @@ app.use('/users', userRoutes);
 
 // Rutas de autenticación
 app.use('/auth', authRoutes);
+
+// Rutas de productos
+app.use('/products', productRoutes);
 
 // Escuchar puerto
 const PORT = process.env.PORT || 5000;

@@ -230,7 +230,7 @@ function isActive(to) {
 
 <style scoped lang="scss">
 // Variables de colores modernos - sin :root para evitar conflictos
-$primary-color: #667eea;
+$primary-color: #ff0000;
 $secondary-color: #764ba2;
 $text-primary: #2d3748;
 $text-secondary: #718096;

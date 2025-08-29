@@ -2,6 +2,33 @@
 
 Este documento explica de forma sencilla cómo funcionan y se relacionan los archivos que vamos modificando. Sirve como guía rápida del stack.
 
+## 2025-08-29 — Implementación del Módulo de Productos
+
+### Backend
+
+- **`backend/src/models/Product.js`** (nuevo)
+  - Esquema de Mongoose para productos con campos: name, description, price, stock, category, image, active.
+  - Índice de texto para búsquedas en name y description.
+  - Validaciones de campos y tipos de datos.
+
+- **`backend/src/controllers/productController.js`** (nuevo)
+  - Controlador completo con operaciones CRUD para productos.
+  - Búsqueda paginada de productos con filtros.
+  - Búsqueda por texto en nombre y descripción.
+  - Manejo de imágenes con Multer.
+  - Soft delete para productos.
+
+- **`backend/src/routes/productRoutes.js`** (nuevo)
+  - Rutas públicas para listar y buscar productos.
+  - Rutas protegidas para administradores (crear, actualizar, eliminar).
+  - Integración de middleware de autenticación y subida de archivos.
+
+- **`backend/src/config/multerConfig.js`** (nuevo)
+  - Configuración de Multer para subida de imágenes.
+  - Validación de tipos de archivo (solo imágenes).
+  - Límite de tamaño de archivo (5MB).
+  - Generación de nombres de archivo únicos.
+
 ## 2025-08-21 — Implementación de Cierre de Sesión
 
 ### Frontend
