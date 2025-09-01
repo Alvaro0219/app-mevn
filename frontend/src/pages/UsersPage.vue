@@ -1,8 +1,8 @@
 <template>
   <q-page padding>
     <div class="row justify-between items-center q-mb-md">
-      <div class="text-h5">LISTA DE USUARIOS</div>
-      <q-btn label="Registrar usuario" :to="{ name: 'usuarios-registrar' }" outline color="primary" no-caps />
+      <h4 class="text-h4 q-my-none">Gestión de Usuarios</h4>
+      <q-btn label="Registrar Usuario" :to="{ name: 'usuarios-registrar' }" outline color="primary" no-caps icon="add"/>
     </div>
 
     <q-card>

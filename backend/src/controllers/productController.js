@@ -1,12 +1,11 @@
 import Product from '../models/Product.js';
 
-// Obtener todos los productos
+// Get all active products with pagination
 const getProducts = async (req, res) => {
   try {
     const { page = 1, limit = 10, sort = '-createdAt', q } = req.query;
     const query = { active: true };
     
-    // Búsqueda por texto
     if (q) {
       query.$or = [
         { name: { $regex: q, $options: 'i' } },
@@ -15,71 +14,39 @@ const getProducts = async (req, res) => {
     }
     
     const options = {
-      page: Math.max(1, parseInt(page, 10)),
-      limit: Math.min(50, Math.max(1, parseInt(limit, 10))),
-      sort: sort,
+      page: parseInt(page, 10),
+      limit: Math.min(50, parseInt(limit, 10)),
+      sort,
       lean: true
     };
     
     const result = await Product.paginate(query, options);
-    
-    res.json({
-      docs: result.docs,
-      totalDocs: result.totalDocs,
-      limit: result.limit,
-      totalPages: result.totalPages,
-      page: result.page,
-      pagingCounter: result.pagingCounter,
-      hasPrevPage: result.hasPrevPage,
-      hasNextPage: result.hasNextPage,
-      prevPage: result.prevPage,
-      nextPage: result.nextPage
-    });
+    res.json(result);
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    res.status(500).json({ message: 'Error al obtener los productos', error: error.message });
   }
 };
 
-// Obtener un producto por ID
+// Get product by ID
 const getProductById = async (req, res) => {
   try {
     const product = await Product.findById(req.params.id);
-    if (!product) {
+    if (!product || !product.active) {
       return res.status(404).json({ message: 'Producto no encontrado' });
     }
     res.json(product);
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    res.status(500).json({ message: 'Error al obtener el producto', error: error.message });
   }
 };
 
-// Crear un nuevo producto
+// Create new product
 const createProduct = async (req, res) => {
   try {
-    console.log('Request body:', req.body);
-    console.log('Uploaded file:', req.file);
-    
     const { name, description, price, stock, category } = req.body;
     
-    // Validar campos requeridos
     if (!name || !description || price === undefined || stock === undefined || !category) {
-      console.log('Validation failed - Missing required fields');
-      return res.status(400).json({ 
-        success: false,
-        message: 'Todos los campos son requeridos',
-        fields: { name, description, price, stock, category }
-      });
-    }
-    
-    // Validar categoría
-    const validCategories = ['Electrónica', 'Hogar', 'Ropa', 'Deportes', 'Otros'];
-    if (!validCategories.includes(category)) {
-      console.log(`Invalid category: ${category}`);
-      return res.status(400).json({
-        success: false,
-        message: 'Categoría no válida',
-        validCategories
-      });
+      return res.status(400).json({ message: 'Todos los campos son requeridos' });
     }
     
     const productData = {
@@ -91,65 +58,58 @@ const createProduct = async (req, res) => {
       image: req.file ? req.file.filename : 'default.jpg'
     };
     
-    console.log('Creating product with data:', productData);
-    
     const newProduct = new Product(productData);
     const productSaved = await newProduct.save();
     
-    console.log('Product created successfully:', productSaved);
-    
     res.status(201).json({
-      success: true,
-      data: productSaved
+      message: 'Producto creado exitosamente',
+      product: productSaved
     });
-    
   } catch (error) {
-    console.error('Error creating product:', error);
-    
-    // Manejar errores de validación de Mongoose
     if (error.name === 'ValidationError') {
-      const messages = Object.values(error.errors).map(val => val.message);
-      return res.status(400).json({
-        success: false,
-        message: 'Error de validación',
-        errors: messages
-      });
+      return res.status(400).json({ message: error.message });
     }
-    
-    res.status(500).json({
-      success: false,
-      message: 'Error al crear el producto',
-      error: error.message
-    });
+    res.status(500).json({ message: 'Error al crear el producto', error: error.message });
   }
 };
 
-// Actualizar un producto
+// Update product
 const updateProduct = async (req, res) => {
   try {
-    const { id } = req.params;
-    const updates = { ...req.body };
+    const { name, description, price, stock, category, active } = req.body;
+    const updateData = {};
     
-    if (req.file) {
-      updates.image = req.file.filename;
-    }
+    if (name) updateData.name = name.trim();
+    if (description) updateData.description = description.trim();
+    if (price !== undefined) updateData.price = parseFloat(price);
+    if (stock !== undefined) updateData.stock = parseInt(stock, 10);
+    if (category) updateData.category = category;
+    if (active !== undefined) updateData.active = active;
+    if (req.file) updateData.image = req.file.filename;
     
-    const updatedProduct = await Product.findByIdAndUpdate(id, updates, {
-      new: true,
-      runValidators: true
-    });
+    const updatedProduct = await Product.findByIdAndUpdate(
+      req.params.id,
+      updateData,
+      { new: true, runValidators: true }
+    );
     
     if (!updatedProduct) {
       return res.status(404).json({ message: 'Producto no encontrado' });
     }
     
-    res.json(updatedProduct);
+    res.json({
+      message: 'Producto actualizado exitosamente',
+      product: updatedProduct
+    });
   } catch (error) {
-    res.status(400).json({ message: error.message });
+    if (error.name === 'ValidationError') {
+      return res.status(400).json({ message: error.message });
+    }
+    res.status(500).json({ message: 'Error al actualizar el producto', error: error.message });
   }
 };
 
-// Eliminar un producto (borrado lógico)
+// Delete product (soft delete)
 const deleteProduct = async (req, res) => {
   try {
     const product = await Product.findByIdAndUpdate(
@@ -162,24 +122,9 @@ const deleteProduct = async (req, res) => {
       return res.status(404).json({ message: 'Producto no encontrado' });
     }
     
-    res.json({ message: 'Producto desactivado correctamente' });
+    res.json({ message: 'Producto eliminado correctamente' });
   } catch (error) {
-    res.status(500).json({ message: error.message });
-  }
-};
-
-// Búsqueda de productos
-const searchProducts = async (req, res) => {
-  try {
-    const { q } = req.query;
-    const products = await Product.find({
-      $text: { $search: q },
-      active: true
-    }).limit(10);
-    
-    res.json(products);
-  } catch (error) {
-    res.status(500).json({ message: error.message });
+    res.status(500).json({ message: 'Error al eliminar el producto', error: error.message });
   }
 };
 
@@ -188,6 +133,5 @@ export {
   getProductById,
   createProduct,
   updateProduct,
-  deleteProduct,
-  searchProducts
+  deleteProduct
 };

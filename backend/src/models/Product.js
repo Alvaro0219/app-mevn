@@ -1,4 +1,5 @@
 import mongoose from 'mongoose';
+import mongoosePaginate from 'mongoose-paginate-v2';
 
 const productSchema = new mongoose.Schema({
   name: {
@@ -50,6 +51,9 @@ const productSchema = new mongoose.Schema({
 
 // Índice para búsqueda
 productSchema.index({ name: 'text', description: 'text' });
+
+// Aplicar el plugin de paginación
+productSchema.plugin(mongoosePaginate);
 
 const Product = mongoose.model('Product', productSchema);
 

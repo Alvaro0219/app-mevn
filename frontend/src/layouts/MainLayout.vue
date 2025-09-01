@@ -191,7 +191,7 @@ const pageTitle = computed(() => {
   const routeName = route.name
   const titles = {
     'inicio': 'Inicio',
-    'usuarios': 'Gestión de Usuarios',
+    'usuarios': 'Usuarios',
     'usuarios-registrar': 'Registrar Usuario',
     'usuarios-editar': 'Editar Usuario',
     'productos': 'Productos',
