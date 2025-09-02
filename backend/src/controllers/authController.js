@@ -35,6 +35,7 @@ export const login = async (req, res) => {
             }
         });
     } catch (error) {
+        console.log('Error en login:', error);
         res.status(500).json({ message: error.message });
     }
 };
@@ -63,7 +64,7 @@ export const logout = (req, res) => {
         message: 'Sesión cerrada exitosamente'
       });
     } catch (error) {
-      console.error('Error en logout:', error);
+      console.log('Error en logout:', error);
       res.status(500).json({
         success: false,
         message: 'Error al cerrar sesión'

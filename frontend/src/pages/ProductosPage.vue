@@ -108,7 +108,6 @@
               v-model="formData.image"
               label="Imagen"
               accept=".jpg, .jpeg, .png, image/*"
-              :rules="[val => editingProduct || val || 'La imagen es requerida']"
               outlined
               dense
             >

@@ -21,6 +21,7 @@ const getProducts = async (req, res) => {
     };
     
     const result = await Product.paginate(query, options);
+    console.log(result);
     res.json(result);
   } catch (error) {
     res.status(500).json({ message: 'Error al obtener los productos', error: error.message });
