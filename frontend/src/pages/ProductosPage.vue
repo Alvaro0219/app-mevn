@@ -155,6 +155,73 @@
         </q-card-actions>
       </q-card>
     </q-dialog>
+
+    <!-- Diálogo de manejo de imagenes -->
+    <q-dialog v-model="showDialog">
+    <q-card style="width: 500px; max-width: 90vw;">
+      <q-card-section>
+        <div class="text-h6">{{ editingProduct ? 'Editar' : 'Nuevo' }} Producto</div>
+      </q-card-section>
+
+      <q-card-section class="q-pt-none">
+        <q-form @submit.prevent="saveProduct" class="q-gutter-md">
+          <!-- ... existing form fields ... -->
+          
+          <!-- Image Upload Section -->
+          <div>
+            <q-file
+              v-model="formData.image"
+              label="Imagen del producto"
+              accept="image/*"
+              outlined
+              dense
+              @update:model-value="handleFileChange"
+              :rules="[val => editingProduct ? true : val || 'La imagen es requerida']"
+            >
+              <template v-slot:prepend>
+                <q-icon name="attach_file" />
+              </template>
+            </q-file>
+            
+            <!-- Image Preview -->
+            <div v-if="imagePreview" class="q-mt-sm">
+              <q-img
+                :src="imagePreview"
+                style="max-width: 200px; max-height: 200px;"
+                class="q-mt-sm"
+              />
+            </div>
+            <div v-else-if="editingProduct && formData.imageUrl" class="q-mt-sm">
+              <q-img
+                :src="formData.imageUrl"
+                style="max-width: 200px; max-height: 200px;"
+                class="q-mt-sm"
+              />
+              <div class="text-caption text-grey-7 q-mt-xs">
+                Imagen actual
+              </div>
+            </div>
+          </div>
+          
+          <div class="row justify-end q-gutter-sm q-mt-md">
+            <q-btn 
+              label="Cancelar" 
+              color="negative" 
+              flat 
+              @click="showDialog = false"
+              :disable="loading"
+            />
+            <q-btn 
+              type="submit" 
+              :label="editingProduct ? 'Actualizar' : 'Guardar'" 
+              color="primary"
+              :loading="loading"
+            />
+          </div>
+          </q-form>
+        </q-card-section>
+      </q-card>
+    </q-dialog>
   </q-page>
 </template>
 
@@ -182,6 +249,7 @@ export default {
     const showDeleteDialog = ref(false);
     const editingProduct = ref(null);
     const productToDelete = ref(null);
+    const imagePreview = ref('');
 
     const formData = ref({
       name: '',
@@ -189,8 +257,22 @@ export default {
       price: 0,
       stock: 0,
       category: '',
-      image: null
+      image: null,
+      imageUrl: ''
     });
+
+    // Handle file selection
+    const handleFileChange = (file) => {
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          imagePreview.value = e.target.result;
+        };
+        reader.readAsDataURL(file);
+      } else {
+        imagePreview.value = '';
+      }
+    };
 
     const columns = [
       { name: 'name', label: 'Nombre', field: 'name', align: 'left', sortable: true },
@@ -242,6 +324,7 @@ export default {
       loadProducts();
     };
 
+    // Reset form
     const resetForm = () => {
       formData.value = {
         name: '',
@@ -249,14 +332,25 @@ export default {
         price: 0,
         stock: 0,
         category: '',
-        image: null
+        image: null,
+        imageUrl: ''
       };
+      imagePreview.value = '';
       editingProduct.value = null;
     };
 
     const editProduct = (product) => {
       editingProduct.value = product._id;
-      formData.value = { ...product };
+      formData.value = {
+        name: product.name,
+        description: product.description,
+        price: product.price,
+        stock: product.stock,
+        category: product.category,
+        image: null,
+        imageUrl: product.image
+      };
+      imagePreview.value = '';
       showDialog.value = true;
     };
 
@@ -264,61 +358,65 @@ export default {
       try {
         const formDataToSend = new FormData();
         
-        // Agregar campos al formData
-        Object.entries(formData.value).forEach(([key, value]) => {
-          if (value !== null && value !== undefined) {
-            formDataToSend.append(key, value);
+        // Add all form fields to FormData
+        Object.keys(formData.value).forEach(key => {
+          if (key !== 'imageUrl' && formData.value[key] !== null && formData.value[key] !== undefined) {
+            formDataToSend.append(key, formData.value[key]);
           }
         });
 
         if (editingProduct.value) {
+          // For update, include the old image ID if not changing the image
+          if (!formData.value.image && formData.value.imageUrl) {
+            formDataToSend.append('oldImageId', formData.value.imageUrl);
+          }
           await updateProduct(editingProduct.value, formDataToSend);
           $q.notify({
-            type: 'positive',
+            color: 'positive',
             message: 'Producto actualizado correctamente',
-            position: 'top'
+            icon: 'check_circle'
           });
         } else {
           await createProduct(formDataToSend);
           $q.notify({
-            type: 'positive',
+            color: 'positive',
             message: 'Producto creado correctamente',
-            position: 'top'
+            icon: 'check_circle'
           });
         }
-
+        
         showDialog.value = false;
         resetForm();
-        loadProducts();
-      } catch {
+        fetchProducts();
+      } catch (err) {
         $q.notify({
-          type: 'negative',
-          message: error.value || 'Error al guardar el producto',
-          position: 'top'
+          color: 'negative',
+          message: err.message || 'Error al guardar el producto',
+          icon: 'report_problem'
         });
       }
     };
 
     const confirmDelete = (product) => {
-      productToDelete.value = product._id;
+      productToDelete.value = product;
       showDeleteDialog.value = true;
     };
 
     const deleteProduct = async () => {
       try {
-        await deleteProductApi(productToDelete.value);
+        await deleteProductApi(productToDelete.value._id);
         $q.notify({
-          type: 'positive',
+          color: 'positive',
           message: 'Producto eliminado correctamente',
-          position: 'top'
+          icon: 'check_circle'
         });
         showDeleteDialog.value = false;
-        loadProducts();
+        fetchProducts();
       } catch {
         $q.notify({
-          type: 'negative',
-          message: error.value || 'Error al eliminar el producto',
-          position: 'top'
+          color: 'negative',
+          message: 'Error al eliminar el producto',
+          icon: 'report_problem'
         });
       }
     };
@@ -336,6 +434,7 @@ export default {
       showDialog,
       showDeleteDialog,
       editingProduct,
+      imagePreview,
       columns,
       pagination,
       
@@ -344,7 +443,9 @@ export default {
       editProduct,
       saveProduct,
       confirmDelete,
-      deleteProduct
+      deleteProduct,
+      handleFileChange,
+      resetForm
     };
   }
 };

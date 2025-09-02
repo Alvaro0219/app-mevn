@@ -1,10 +1,11 @@
 import Product from '../models/Product.js';
+import cloudinary from '../config/cloudinary.js';
 
 // Get all active products with pagination
 const getProducts = async (req, res) => {
   try {
     const { page = 1, limit = 10, sort = '-createdAt', q } = req.query;
-    const query = { active: true };
+    const query = {};
     
     if (q) {
       query.$or = [
@@ -49,6 +50,10 @@ const createProduct = async (req, res) => {
     if (!name || !description || price === undefined || stock === undefined || !category) {
       return res.status(400).json({ message: 'Todos los campos son requeridos' });
     }
+
+    if (!req.file) {
+      return res.status(400).json({ message: 'Por favor sube una imagen' });
+    }
     
     const productData = {
       name: name.trim(),
@@ -86,7 +91,13 @@ const updateProduct = async (req, res) => {
     if (stock !== undefined) updateData.stock = parseInt(stock, 10);
     if (category) updateData.category = category;
     if (active !== undefined) updateData.active = active;
-    if (req.file) updateData.image = req.file.filename;
+    if (req.file) {
+      // Si hay una imagen previa, opcionalmente puedes eliminarla de Cloudinary
+      if (req.body.oldImageId) {
+        await cloudinary.uploader.destroy(req.body.oldImageId);
+      }
+      updateData.image = req.file.path;
+    }
     
     const updatedProduct = await Product.findByIdAndUpdate(
       req.params.id,
@@ -113,18 +124,23 @@ const updateProduct = async (req, res) => {
 // Delete product (soft delete)
 const deleteProduct = async (req, res) => {
   try {
-    const product = await Product.findByIdAndUpdate(
-      req.params.id,
-      { active: false },
-      { new: true }
-    );
+    const product = await Product.findById(req.params.id);
     
     if (!product) {
       return res.status(404).json({ message: 'Producto no encontrado' });
     }
+
+    // Opcional: Eliminar la imagen de Cloudinary
+    if (product.image) {
+      const publicId = product.image.split('/').pop().split('.')[0];
+      await cloudinary.uploader.destroy(`productos/${publicId}`);
+    }
+
+    await Product.findByIdAndDelete(req.params.id);
     
     res.json({ message: 'Producto eliminado correctamente' });
   } catch (error) {
+    console.error(error);
     res.status(500).json({ message: 'Error al eliminar el producto', error: error.message });
   }
 };

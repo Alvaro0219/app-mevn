@@ -2,6 +2,38 @@
 
 Este documento explica de forma sencilla cómo funcionan y se relacionan los archivos que vamos modificando. Sirve como guía rápida del stack.
 
+## 2025-09-02 — Integración de Cloudinary para Gestión de Imágenes
+
+### Backend
+
+- **`backend/src/config/cloudinary.js`** (nuevo)
+  - Configuración del cliente de Cloudinary con credenciales seguras.
+  - Uso de variables de entorno para almacenar credenciales sensibles.
+
+- **`backend/src/config/cloudinaryStorage.js`** (nuevo)
+  - Configuración de almacenamiento en Cloudinary usando multer-storage-cloudinary.
+  - Definición de carpeta 'productos' para organizar las imágenes.
+  - Transformaciones automáticas de imágenes (redimensionamiento a 800x800px).
+  - Validación de formatos de imagen permitidos (jpg, jpeg, png, webp).
+
+- **`backend/src/config/multerConfig.js`** (actualizado)
+  - Integración con Cloudinary Storage.
+  - Límite de tamaño de archivo configurado a 5MB.
+  - Filtro para aceptar solo archivos de imagen.
+
+- **`backend/src/controllers/productController.js`** (actualizado)
+  - Manejo de URLs de Cloudinary para las imágenes de productos.
+  - Eliminación de imágenes antiguas al actualizar o eliminar productos.
+  - Validación de carga de imágenes requerida.
+
+### Frontend
+
+- **`frontend/src/pages/ProductosPage.vue`** (actualizado)
+  - Vista previa de imágenes antes de subirlas.
+  - Manejo de carga de archivos con FormData.
+  - Mejoras en la experiencia de usuario con notificaciones.
+  - Visualización de imágenes existentes en modo edición.
+
 ## 2025-08-29 — Implementación del Módulo de Productos
 
 ### Backend

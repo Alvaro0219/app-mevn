@@ -17,7 +17,7 @@
           <q-td :props="props">
             <q-btn dense flat icon="edit" color="primary" class="q-mr-sm"
               :to="{ name: 'usuarios-editar', params: { id: props.row._id } }" />
-            <q-btn dense flat icon="delete" color="primary"
+            <q-btn dense flat icon="delete" color="negative" 
               @click="confirmAndDelete(props.row._id)" />
           </q-td>
         </template>
