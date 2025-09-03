@@ -6,18 +6,17 @@
           <h4 class="text-h4 q-my-none">Gestión de Productos</h4>
         </div>
         <div class="col-auto">
-          <q-btn 
-            outline 
+          <q-btn
+            outline
             color="primary"
             no-caps
-            icon="add" 
-            label="Nuevo Producto" 
-            @click="showDialog = true"
+            icon="add"
+            label="Nuevo Producto"
+            @click="openCreateDialog"
           />
         </div>
       </div>
 
-      <!-- Tabla de productos -->
       <q-table
         :rows="products"
         :columns="columns"
@@ -27,22 +26,21 @@
         @request="onRequest"
         :rows-per-page-options="[5, 10, 15, 20]"
       >
-        <!-- Columna de acciones -->
         <template v-slot:body-cell-actions="props">
           <q-td :props="props">
-            <q-btn 
-              flat 
-              round 
-              color="primary" 
-              icon="edit" 
+            <q-btn
+              flat
+              round
+              color="primary"
+              icon="edit"
               @click="editProduct(props.row)"
               class="q-mr-sm"
             />
-            <q-btn 
-              flat 
-              round 
-              color="negative" 
-              icon="delete" 
+            <q-btn
+              flat
+              round
+              color="negative"
+              icon="delete"
               @click="confirmDelete(props.row)"
             />
           </q-td>
@@ -50,7 +48,6 @@
       </q-table>
     </div>
 
-    <!-- Diálogo para crear/editar producto -->
     <q-dialog v-model="showDialog">
       <q-card style="width: 500px; max-width: 90vw;">
         <q-card-section>
@@ -58,7 +55,7 @@
         </q-card-section>
 
         <q-card-section class="q-pt-none">
-          <q-form @submit="saveProduct" class="q-gutter-md">
+          <q-form @submit.prevent="saveProduct" class="q-gutter-md">
             <q-input
               v-model="formData.name"
               label="Nombre"
@@ -66,7 +63,7 @@
               outlined
               dense
             />
-            
+
             <q-input
               v-model="formData.description"
               label="Descripción"
@@ -75,7 +72,7 @@
               outlined
               dense
             />
-            
+
             <q-input
               v-model.number="formData.price"
               label="Precio"
@@ -85,7 +82,7 @@
               outlined
               dense
             />
-            
+
             <q-input
               v-model.number="formData.stock"
               label="Stock"
@@ -94,7 +91,7 @@
               outlined
               dense
             />
-            
+
             <q-select
               v-model="formData.category"
               :options="['Electrónica', 'Hogar', 'Ropa', 'Deportes', 'Otros']"
@@ -103,29 +100,56 @@
               outlined
               dense
             />
-            
-            <q-file
-              v-model="formData.image"
-              label="Imagen"
-              accept=".jpg, .jpeg, .png, image/*"
-              outlined
-              dense
-            >
-              <template v-slot:prepend>
-                <q-icon name="attach_file" />
-              </template>
-            </q-file>
-            
+
+            <div>
+              <q-file
+                v-model="formData.image"
+                label="Imagen del producto"
+                accept="image/*"
+                outlined
+                dense
+                @update:model-value="handleFileChange"
+                :rules="[val => editingProduct ? true : val || 'La imagen es requerida']"
+              >
+                <template v-slot:prepend>
+                  <q-icon name="attach_file" />
+                </template>
+              </q-file>
+
+              <div v-if="imagePreview" class="q-mt-sm">
+                <q-img
+                  :src="imagePreview"
+                  style="max-width: 200px; max-height: 200px;"
+                  class="q-mt-sm"
+                />
+                <div class="text-caption text-grey-7 q-mt-xs">
+                  Nueva imagen
+                </div>
+              </div>
+
+              <div v-else-if="editingProduct && formData.imageUrl" class="q-mt-sm">
+                <q-img
+                  :src="formData.imageUrl"
+                  style="max-width: 200px; max-height: 200px;"
+                  class="q-mt-sm"
+                />
+                <div class="text-caption text-grey-7 q-mt-xs">
+                  Imagen actual
+                </div>
+              </div>
+            </div>
+
             <div class="row justify-end q-gutter-sm q-mt-md">
-              <q-btn 
-                label="Cancelar" 
-                color="negative" 
-                flat 
-                @click="showDialog = false"
+              <q-btn
+                label="Cancelar"
+                color="negative"
+                flat
+                @click="closeDialog"
+                :disable="loading"
               />
-              <q-btn 
-                type="submit" 
-                :label="editingProduct ? 'Actualizar' : 'Guardar'" 
+              <q-btn
+                type="submit"
+                :label="editingProduct ? 'Actualizar' : 'Guardar'"
                 color="primary"
                 :loading="loading"
               />
@@ -135,7 +159,6 @@
       </q-card>
     </q-dialog>
 
-    <!-- Diálogo de confirmación de eliminación -->
     <q-dialog v-model="showDeleteDialog">
       <q-card>
         <q-card-section class="row items-center">
@@ -145,81 +168,14 @@
 
         <q-card-actions align="right">
           <q-btn flat label="Cancelar" color="primary" v-close-popup />
-          <q-btn 
-            flat 
-            label="Eliminar" 
-            color="negative" 
-            @click="deleteProduct" 
+          <q-btn
+            flat
+            label="Eliminar"
+            color="negative"
+            @click="deleteProduct"
             :loading="loading"
           />
         </q-card-actions>
-      </q-card>
-    </q-dialog>
-
-    <!-- Diálogo de manejo de imagenes -->
-    <q-dialog v-model="showDialog">
-    <q-card style="width: 500px; max-width: 90vw;">
-      <q-card-section>
-        <div class="text-h6">{{ editingProduct ? 'Editar' : 'Nuevo' }} Producto</div>
-      </q-card-section>
-
-      <q-card-section class="q-pt-none">
-        <q-form @submit.prevent="saveProduct" class="q-gutter-md">
-          <!-- ... existing form fields ... -->
-          
-          <!-- Image Upload Section -->
-          <div>
-            <q-file
-              v-model="formData.image"
-              label="Imagen del producto"
-              accept="image/*"
-              outlined
-              dense
-              @update:model-value="handleFileChange"
-              :rules="[val => editingProduct ? true : val || 'La imagen es requerida']"
-            >
-              <template v-slot:prepend>
-                <q-icon name="attach_file" />
-              </template>
-            </q-file>
-            
-            <!-- Image Preview -->
-            <div v-if="imagePreview" class="q-mt-sm">
-              <q-img
-                :src="imagePreview"
-                style="max-width: 200px; max-height: 200px;"
-                class="q-mt-sm"
-              />
-            </div>
-            <div v-else-if="editingProduct && formData.imageUrl" class="q-mt-sm">
-              <q-img
-                :src="formData.imageUrl"
-                style="max-width: 200px; max-height: 200px;"
-                class="q-mt-sm"
-              />
-              <div class="text-caption text-grey-7 q-mt-xs">
-                Imagen actual
-              </div>
-            </div>
-          </div>
-          
-          <div class="row justify-end q-gutter-sm q-mt-md">
-            <q-btn 
-              label="Cancelar" 
-              color="negative" 
-              flat 
-              @click="showDialog = false"
-              :disable="loading"
-            />
-            <q-btn 
-              type="submit" 
-              :label="editingProduct ? 'Actualizar' : 'Guardar'" 
-              color="primary"
-              :loading="loading"
-            />
-          </div>
-          </q-form>
-        </q-card-section>
       </q-card>
     </q-dialog>
   </q-page>
@@ -232,17 +188,16 @@ import { useProducts } from 'src/composables/useProducts';
 
 export default {
   name: 'ProductosPage',
-  
+
   setup() {
     const $q = useQuasar();
-    const { 
-      products, 
-      loading, 
-      error, 
-      fetchProducts, 
-      createProduct, 
-      updateProduct, 
-      deleteProduct: deleteProductApi 
+    const {
+      products,
+      loading,
+      fetchProducts,
+      createProduct,
+      updateProduct,
+      deleteProduct: deleteProductApi
     } = useProducts();
 
     const showDialog = ref(false);
@@ -299,13 +254,13 @@ export default {
           limit: rowsPerPage,
           sort: descending ? `-${sortBy}` : sortBy
         };
-        
+
         const data = await fetchProducts(params);
         pagination.value.rowsNumber = data.totalDocs;
-      } catch {
+      } catch (err) {
         $q.notify({
           type: 'negative',
-          message: error.value || 'Error al cargar los productos',
+          message: err.message || 'Error al cargar los productos',
           position: 'top'
         });
       }
@@ -313,7 +268,7 @@ export default {
 
     const onRequest = (props) => {
       const { page, rowsPerPage, sortBy, descending } = props.pagination;
-      
+
       // Actualizar la paginación local
       pagination.value.page = page;
       pagination.value.rowsPerPage = rowsPerPage;
@@ -339,6 +294,17 @@ export default {
       editingProduct.value = null;
     };
 
+    // Cerrar diálogo y resetear form
+    const closeDialog = () => {
+      showDialog.value = false;
+      resetForm();
+    };
+
+    const openCreateDialog = () => {
+      resetForm();
+      showDialog.value = true;
+    };
+
     const editProduct = (product) => {
       editingProduct.value = product._id;
       formData.value = {
@@ -357,8 +323,6 @@ export default {
     const saveProduct = async () => {
       try {
         const formDataToSend = new FormData();
-        
-        // Add all form fields to FormData
         Object.keys(formData.value).forEach(key => {
           if (key !== 'imageUrl' && formData.value[key] !== null && formData.value[key] !== undefined) {
             formDataToSend.append(key, formData.value[key]);
@@ -366,9 +330,11 @@ export default {
         });
 
         if (editingProduct.value) {
-          // For update, include the old image ID if not changing the image
+          // Si estamos editando y no se seleccionó una nueva imagen,
+          // no enviamos el campo 'image' en el FormData para evitar errores en la API
+          // y pasamos la URL de la imagen actual para que la API la mantenga
           if (!formData.value.image && formData.value.imageUrl) {
-            formDataToSend.append('oldImageId', formData.value.imageUrl);
+            formDataToSend.append('imageUrl', formData.value.imageUrl);
           }
           await updateProduct(editingProduct.value, formDataToSend);
           $q.notify({
@@ -384,10 +350,9 @@ export default {
             icon: 'check_circle'
           });
         }
-        
-        showDialog.value = false;
-        resetForm();
-        fetchProducts();
+
+        closeDialog();
+        loadProducts();
       } catch (err) {
         $q.notify({
           color: 'negative',
@@ -411,11 +376,11 @@ export default {
           icon: 'check_circle'
         });
         showDeleteDialog.value = false;
-        fetchProducts();
-      } catch {
+        loadProducts();
+      } catch (err) {
         $q.notify({
           color: 'negative',
-          message: 'Error al eliminar el producto',
+          message: err.message || 'Error al eliminar el producto',
           icon: 'report_problem'
         });
       }
@@ -437,15 +402,16 @@ export default {
       imagePreview,
       columns,
       pagination,
-      
+
       // Methods
       onRequest,
+      openCreateDialog,
       editProduct,
       saveProduct,
       confirmDelete,
       deleteProduct,
       handleFileChange,
-      resetForm
+      closeDialog
     };
   }
 };
