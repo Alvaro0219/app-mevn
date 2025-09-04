@@ -31,6 +31,14 @@
             <q-btn
               flat
               round
+              color="secondary"
+              icon="visibility"
+              @click="viewProduct(props.row._id)"
+              class="q-mr-sm"
+            />
+            <q-btn
+              flat
+              round
               color="primary"
               icon="edit"
               @click="editProduct(props.row)"
@@ -185,12 +193,14 @@
 import { ref, onMounted } from 'vue';
 import { useQuasar } from 'quasar';
 import { useProducts } from 'src/composables/useProducts';
+import { useRouter } from 'vue-router';
 
 export default {
   name: 'ProductosPage',
 
   setup() {
     const $q = useQuasar();
+    const router = useRouter();
     const {
       products,
       loading,
@@ -362,6 +372,10 @@ export default {
       }
     };
 
+    const viewProduct = (productId) => {
+      router.push({ name: 'producto-detalle', params: { id: productId } });
+    };
+
     const confirmDelete = (product) => {
       productToDelete.value = product;
       showDeleteDialog.value = true;
@@ -411,7 +425,8 @@ export default {
       confirmDelete,
       deleteProduct,
       handleFileChange,
-      closeDialog
+      closeDialog,
+      viewProduct
     };
   }
 };

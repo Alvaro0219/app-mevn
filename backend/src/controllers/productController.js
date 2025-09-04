@@ -29,17 +29,22 @@ const getProducts = async (req, res) => {
 };
 
 // Get product by ID
+// Get product by ID
 const getProductById = async (req, res) => {
-  try {
-    const product = await Product.findById(req.params.id);
-    if (!product || !product.active) {
-      return res.status(404).json({ message: 'Producto no encontrado' });
-    }
-    res.json(product);
-  } catch (error) {
-    res.status(500).json({ message: 'Error al obtener el producto', error: error.message });
-  }
-};
+    try {
+      const product = await Product.findById(req.params.id);
+      
+      // La única validación que necesitas es si el producto no fue encontrado
+      if (!product) { 
+        return res.status(404).json({ message: 'Producto no encontrado' });
+      }
+      
+      res.json(product);
+    } catch (error) {
+      // Este 'catch' también maneja IDs con formato incorrecto
+      res.status(500).json({ message: 'Error al obtener el producto', error: error.message });
+    }
+  };
 
 // Create new product
 const createProduct = async (req, res) => {
