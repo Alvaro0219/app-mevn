@@ -60,7 +60,6 @@ export function useProducts() {
                     'Content-Type': 'multipart/form-data'
                 }
             });
-            
             return res.data;
         } catch (err) {
             error.value = err.response?.data?.message || err.message;

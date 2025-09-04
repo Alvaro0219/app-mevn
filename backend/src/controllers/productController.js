@@ -22,7 +22,6 @@ const getProducts = async (req, res) => {
     };
     
     const result = await Product.paginate(query, options);
-    console.log(result);
     res.json(result);
   } catch (error) {
     res.status(500).json({ message: 'Error al obtener los productos', error: error.message });
@@ -61,7 +60,7 @@ const createProduct = async (req, res) => {
       price: parseFloat(price),
       stock: parseInt(stock, 10),
       category,
-      image: req.file ? req.file.filename : 'default.jpg'
+      image: req.file ? req.file.path : 'default.jpg'
     };
     
     const newProduct = new Product(productData);
