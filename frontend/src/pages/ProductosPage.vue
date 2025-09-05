@@ -17,6 +17,43 @@
         </div>
       </div>
 
+      <!-- Tarjetas de métricas -->
+      <div class="row q-col-gutter-md q-mb-lg">
+        <div class="col-xs-12 col-sm-6 col-md-4">
+          <q-card class="metric-card gradient-primary">
+            <q-card-section class="row items-center">
+              <q-icon name="inventory" size="36px" color="white" class="q-mr-md" />
+              <div>
+                <div class="metric-title">Total de productos</div>
+                <div class="metric-value">{{ products.length }}</div>
+              </div>
+            </q-card-section>
+          </q-card>
+        </div>
+        <div class="col-xs-12 col-sm-6 col-md-4">
+          <q-card class="metric-card gradient-warning">
+            <q-card-section class="row items-center">
+              <q-icon name="warning" size="36px" color="white" class="q-mr-md" />
+              <div>
+                <div class="metric-title">Stock bajo</div>
+                <div class="metric-value">{{ lowStockCount }}</div>
+              </div>
+            </q-card-section>
+          </q-card>
+        </div>
+        <div class="col-xs-12 col-sm-6 col-md-4">
+          <q-card class="metric-card gradient-success">
+            <q-card-section class="row items-center">
+              <q-icon name="attach_money" size="36px" color="white" class="q-mr-md" />
+              <div>
+                <div class="metric-title">Valor total en inventario</div>
+                <div class="metric-value">${{ totalInventoryValue }}</div>
+              </div>
+            </q-card-section>
+          </q-card>
+        </div>
+      </div>
+
       <q-table
         :rows="products"
         :columns="columns"
@@ -190,7 +227,7 @@
 </template>
 
 <script>
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, computed } from 'vue';
 import { useQuasar } from 'quasar';
 import { useProducts } from 'src/composables/useProducts';
 import { useRouter } from 'vue-router';
@@ -224,6 +261,16 @@ export default {
       category: '',
       image: null,
       imageUrl: ''
+    });
+
+    // Métrica: productos con stock bajo (por ejemplo, stock < 5)
+    const lowStockCount = computed(() => {
+      return products.value.filter(p => p.stock !== undefined && p.stock < 10).length;
+    });
+
+    // Métrica: valor total en inventario
+    const totalInventoryValue = computed(() => {
+      return products.value.reduce((acc, p) => acc + (p.price * (p.stock || 0)), 0).toFixed(2);
     });
 
     // Handle file selection
@@ -416,7 +463,8 @@ export default {
       imagePreview,
       columns,
       pagination,
-
+      lowStockCount,
+      totalInventoryValue,
       // Methods
       onRequest,
       openCreateDialog,
@@ -432,9 +480,104 @@ export default {
 };
 </script>
 
-<style scoped>
-.q-table__title {
-  font-size: 1.5rem;
-  font-weight: 500;
+<style scoped lang="scss">
+.metric-card {
+  border-radius: 16px;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.07);
+  color: #fff;
+  min-height: 110px;
+  .metric-title {
+    font-size: 1rem;
+    font-weight: 500;
+    opacity: 0.85;
+    margin-bottom: 2px;
+  }
+  .metric-value {
+    font-size: 2.1rem;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    margin-top: 2px;
+  }
+}
+.gradient-primary {
+  background: linear-gradient(135deg, $primary 0%, $secondary 100%);
+}
+.gradient-warning {
+  background: linear-gradient(135deg, $warning 0%, $accent 100%);
+}
+.gradient-success {
+  background: linear-gradient(135deg, $positive 0%, $primary 100%);
+}
+
+.q-table {
+  background: $card;
+  border-radius: 12px !important;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+  overflow: hidden;
+  th {
+    background: $sidebar;
+    color: $muted-foreground;
+    font-weight: 600;
+    border-bottom: 1px solid $border;
+    font-size: 1rem;
+    letter-spacing: 0.02em;
+    padding: 14px 10px;
+  }
+  td {
+    color: $foreground;
+    border-bottom: 1px solid $border;
+    font-size: 0.98rem;
+    padding: 12px 10px;
+    vertical-align: middle;
+  }
+  tr {
+    transition: background 0.2s;
+    &:hover {
+      background: rgba($secondary, 0.07);
+    }
+  }
+}
+
+.q-btn {
+  border-radius: 8px;
+  font-weight: 600;
+  transition: all 0.2s;
+  &.q-mr-sm {
+    margin-right: 0.5rem;
+  }
+  &[color="primary"] {
+    background: linear-gradient(90deg, $primary 0%, $secondary 100%);
+    color: #fff;
+    border: none;
+    &:hover {
+      filter: brightness(1.1);
+    }
+  }
+  &[color="secondary"] {
+    background: $accent;
+    color: #fff;
+    border: none;
+    &:hover {
+      filter: brightness(1.1);
+    }
+  }
+  &[color="negative"] {
+    background: $destructive;
+    color: #fff;
+    border: none;
+    &:hover {
+      filter: brightness(1.1);
+    }
+  }
+}
+
+// Responsive
+@media (max-width: 600px) {
+  .q-table {
+    th, td {
+      font-size: 0.92rem;
+      padding: 8px 4px;
+    }
+  }
 }
 </style>

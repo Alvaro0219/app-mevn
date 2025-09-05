@@ -13,6 +13,14 @@
         :loading="loading"
         flat
       >
+        <template v-slot:body-cell-isActive="props">
+          <q-td :props="props">
+            <span :class="['status-badge', props.row.isActive ? 'active' : 'inactive']">
+              {{ props.row.isActive ? 'Activo' : 'Inactivo' }}
+            </span>
+          </q-td>
+        </template>
+
         <template v-slot:body-cell-actions="props">
           <q-td :props="props">
             <q-btn dense flat icon="edit" color="primary" class="q-mr-sm"
@@ -74,3 +82,120 @@ const confirmAndDelete = (id) => {
 }
 
 </script>
+
+<style scoped lang="scss">
+// Variables modernas de Quasar
+$primary-color: $primary;
+$secondary-color: $secondary;
+$text-primary: $foreground;
+$text-secondary: $muted-foreground;
+$bg-light: $sidebar;
+$bg-lighter: $card;
+$border-color: $border;
+$radius: $radius;
+
+.q-card {
+  border-radius: 16px;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.07);
+  background: $bg-light;
+  border: 1px solid $border-color;
+  margin-bottom: 2rem;
+}
+
+.q-table {
+  background: $card;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+  th {
+    background: $bg-lighter;
+    color: $text-secondary;
+    font-weight: 600;
+    border-bottom: 1px solid $border-color;
+    font-size: 1rem;
+    letter-spacing: 0.02em;
+    padding: 14px 10px;
+  }
+  td {
+    color: $text-primary;
+    border-bottom: 1px solid $border-color;
+    font-size: 0.98rem;
+    padding: 12px 10px;
+    vertical-align: middle;
+  }
+  tr {
+    transition: background 0.2s;
+    &:hover {
+      background: rgba($secondary, 0.07);
+    }
+  }
+}
+
+// Badge para estado
+.status-badge {
+  display: inline-block;
+  padding: 0.25em 0.7em;
+  border-radius: 8px;
+  font-size: 0.85em;
+  font-weight: 600;
+  &.active {
+    background: $primary;
+    color: #fff;
+  }
+  &.inactive {
+    background: $muted;
+    color: $text-secondary;
+  }
+  &.pending {
+    background: $accent;
+    color: #fff;
+  }
+}
+
+// Botones de acción
+.q-btn {
+  border-radius: 8px;
+  font-weight: 600;
+  transition: all 0.2s;
+  &.q-mr-sm {
+    margin-right: 0.5rem;
+  }
+  &[color="primary"] {
+    background: linear-gradient(90deg, $primary-color 0%, $secondary-color 100%);
+    color: #fff;
+    border: none;
+    &:hover {
+      filter: brightness(1.1);
+    }
+  }
+  &[color="negative"] {
+    background: $destructive;
+    color: #fff;
+    border: none;
+    &:hover {
+      filter: brightness(1.1);
+    }
+  }
+}
+
+.text-negative {
+  color: $destructive;
+  font-weight: 600;
+}
+
+.q-inner-loading {
+  background: rgba($primary-color, 0.08);
+}
+
+// Responsive
+@media (max-width: 600px) {
+  .q-card {
+    border-radius: 8px;
+  }
+  .q-table {
+    th, td {
+      font-size: 0.92rem;
+      padding: 8px 4px;
+    }
+  }
+}
+</style>

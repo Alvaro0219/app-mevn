@@ -29,28 +29,27 @@ const getProducts = async (req, res) => {
 };
 
 // Get product by ID
-// Get product by ID
 const getProductById = async (req, res) => {
-    try {
-      const product = await Product.findById(req.params.id);
-      
-      // La única validación que necesitas es si el producto no fue encontrado
-      if (!product) { 
-        return res.status(404).json({ message: 'Producto no encontrado' });
-      }
-      
-      res.json(product);
-    } catch (error) {
-      // Este 'catch' también maneja IDs con formato incorrecto
-      res.status(500).json({ message: 'Error al obtener el producto', error: error.message });
-    }
-  };
+  try {
+    const product = await Product.findById(req.params.id);
+
+    // La única validación que necesitas es si el producto no fue encontrado
+    if (!product) {
+      return res.status(404).json({ message: 'Producto no encontrado' });
+    }
+
+    res.json(product);
+  } catch (error) {
+    // Este 'catch' también maneja IDs con formato incorrecto
+    res.status(500).json({ message: 'Error al obtener el producto', error: error.message });
+  }
+};
 
 // Create new product
-const createProduct = async (req, res) => {
+async function createProduct(req, res) {
   try {
     const { name, description, price, stock, category } = req.body;
-    
+
     if (!name || !description || price === undefined || stock === undefined || !category) {
       return res.status(400).json({ message: 'Todos los campos son requeridos' });
     }
@@ -58,7 +57,7 @@ const createProduct = async (req, res) => {
     if (!req.file) {
       return res.status(400).json({ message: 'Por favor sube una imagen' });
     }
-    
+
     const productData = {
       name: name.trim(),
       description: description.trim(),
@@ -67,10 +66,10 @@ const createProduct = async (req, res) => {
       category,
       image: req.file ? req.file.path : 'default.jpg'
     };
-    
+
     const newProduct = new Product(productData);
     const productSaved = await newProduct.save();
-    
+
     res.status(201).json({
       message: 'Producto creado exitosamente',
       product: productSaved
@@ -81,7 +80,7 @@ const createProduct = async (req, res) => {
     }
     res.status(500).json({ message: 'Error al crear el producto', error: error.message });
   }
-};
+}
 
 // Update product
 const updateProduct = async (req, res) => {

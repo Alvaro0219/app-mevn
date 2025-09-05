@@ -229,14 +229,14 @@ function isActive(to) {
 </script>
 
 <style scoped lang="scss">
-// Variables de colores modernos - sin :root para evitar conflictos
-$primary-color: #ff0000;
-$secondary-color: #764ba2;
-$text-primary: #2d3748;
-$text-secondary: #718096;
-$bg-light: #f8fafc;
-$bg-lighter: #f1f5f9;
-$border-color: #e2e8f0;
+// Variables de colores modernos - ahora usando las variables de Quasar
+$primary-color: $primary;
+$secondary-color: $secondary;
+$text-primary: $foreground;
+$text-secondary: $muted-foreground;
+$bg-light: $sidebar;
+$bg-lighter: $card;
+$border-color: $border;
 
 // Header moderno
 .header--modern {
@@ -364,7 +364,7 @@ $border-color: #e2e8f0;
     color: $text-primary;
     
     &:hover {
-      background: rgba(102, 126, 234, 0.08);
+      background: rgba($secondary, 0.08);
       transform: translateX(4px);
     }
     
@@ -409,7 +409,7 @@ $border-color: #e2e8f0;
 // Footer del drawer
 .drawer-footer {
   padding: 16px 20px;
-  background: #ffffff;
+  background: $card;
   border-top: 1px solid $border-color;
   box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.05);
 }
@@ -453,11 +453,11 @@ $border-color: #e2e8f0;
 
 .logout-btn {
   transition: all 0.2s ease;
-  color: #dc2626;
+  color: $destructive;
   flex-shrink: 0;
   
   &:hover {
-    background: rgba(220, 38, 38, 0.1);
+    background: rgba($destructive, 0.1);
     transform: scale(1.05);
   }
 }
