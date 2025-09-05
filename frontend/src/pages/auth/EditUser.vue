@@ -112,3 +112,38 @@ const guardar = async () => {
   }
 }
 </script>
+
+<style scoped lang="scss">
+.q-btn {
+  border-radius: 8px;
+  font-weight: 600;
+  transition: all 0.2s;
+  &.full-width {
+    width: 100%;
+  }
+  &[color="primary"] {
+    background: linear-gradient(90deg, $primary 0%, $secondary 100%);
+    color: #fff;
+    border: none;
+    &:hover {
+      filter: brightness(1.1);
+    }
+  }
+  &[color="negative"] {
+    background: $destructive;
+    color: #fff;
+    border: none;
+    &:hover {
+      filter: brightness(1.1);
+    }
+  }
+  &[color="gray7"] {
+    background: $muted;
+    color: $foreground;
+    border: none;
+    &:hover {
+      filter: brightness(1.1);
+    }
+  }
+}
+</style>

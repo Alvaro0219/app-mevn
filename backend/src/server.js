@@ -6,6 +6,7 @@ import userRoutes from './routes/userRoutes.js';
 import authRoutes from './routes/authRoutes.js';
 import productRoutes from './routes/productRoutes.js';
 import connectDB from './config/db.js';
+import cookieParser from 'cookie-parser';
 
 dotenv.config();
 const app = express();
@@ -14,6 +15,7 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 app.use(morgan('dev'));
+app.use(cookieParser());
 
 // Conexión a la DB
 await connectDB();

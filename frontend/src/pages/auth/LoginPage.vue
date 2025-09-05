@@ -11,7 +11,7 @@
                   style="height: 100px; margin: 0 auto 20px; display: block;"
                   class="logo"
                 >
-                <div class="text-h5 text-weight-bold q-mb-md text-negative">Iniciar Sesión</div>
+                <div class="text-h5 text-weight-bold q-mb-md text-primary">Iniciar Sesión</div>
                 <q-banner v-if="error" class="bg-negative text-white q-mb-md">
                   {{ error }}
                 </q-banner>
@@ -99,3 +99,46 @@
     }
   }
   </script>
+
+<style scoped lang="scss">
+.q-card {
+  border-radius: 16px;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.07);
+  background: $card;
+  border: 1px solid $border;
+}
+.q-card-section {
+  padding: 24px 20px;
+}
+.q-banner {
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+  background: $destructive;
+  color: $destructive-foreground;
+}
+.q-btn.full-width {
+  border-radius: 8px;
+  font-weight: 600;
+  background: linear-gradient(90deg, $primary 0%, $secondary 100%);
+  color: $primary-foreground;
+  border: none;
+  transition: all 0.2s;
+  &:hover {
+    filter: brightness(1.1);
+  }
+}
+.q-input {
+  border-radius: 8px;
+  background: $input;
+  color: $foreground;
+}
+.logo {
+  filter: drop-shadow(0 2px 8px rgba(0,0,0,0.08));
+}
+.q-page.flex-center {
+  background: linear-gradient(135deg, $sidebar 0%, $card 100%);
+}
+.text-h5.text-weight-bold.text-negative {
+  color: $primary;
+}
+</style>

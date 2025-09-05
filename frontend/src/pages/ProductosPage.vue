@@ -508,4 +508,38 @@ export default {
 .gradient-success {
   background: linear-gradient(135deg, $positive 0%, $primary 100%);
 }
+
+// Botones de acción
+.q-btn {
+  border-radius: 8px;
+  font-weight: 600;
+  transition: all 0.2s;
+  &.q-mr-sm {
+    margin-right: 0.5rem;
+  }
+  &[color="primary"] {
+    background: linear-gradient(90deg, $primary 0%, $secondary 100%);
+    color: #fff;
+    border: none;
+    &:hover {
+      filter: brightness(1.1);
+    }
+  }
+  &[color="secondary"] {
+    background: $accent;
+    color: #fff;
+    border: none;
+    &:hover {
+      filter: brightness(1.1);
+    }
+  }
+  &[color="negative"] {
+    background: $destructive;
+    color: #fff;
+    border: none;
+    &:hover {
+      filter: brightness(1.1);
+    }
+  }
+}
 </style>

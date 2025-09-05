@@ -13,10 +13,19 @@
         :loading="loading"
         flat
       >
+
         <template v-slot:body-cell-isActive="props">
           <q-td :props="props">
             <span :class="['status-badge', props.row.isActive ? 'active' : 'inactive']">
               {{ props.row.isActive ? 'Activo' : 'Inactivo' }}
+            </span>
+          </q-td>
+        </template>
+
+        <template v-slot:body-cell-role="props">
+          <q-td :props="props">
+            <span :class="['role-badge', props.row.role]">
+              {{ props.row.role === 'admin' ? 'admin' : 'user' }}
             </span>
           </q-td>
         </template>
@@ -96,11 +105,28 @@ const confirmAndDelete = (id) => {
     color: #fff;
   }
   &.inactive {
-    background: $muted;
-    color: $text-secondary;
+    background: $secondary;
+    color: #fff;
   }
   &.pending {
     background: $accent;
+    color: #fff;
+  }
+}
+
+// Badge para rol
+.role-badge {
+  display: inline-block;
+  padding: 0.25em 0.7em;
+  border-radius: 8px;
+  font-size: 0.85em;
+  font-weight: 600;
+  &.admin {
+    background: #2563eb; // celeste oscuro
+    color: #fff;
+  }
+  &.user {
+    background: #60a5fa; // celeste claro
     color: #fff;
   }
 }
@@ -114,7 +140,15 @@ const confirmAndDelete = (id) => {
     margin-right: 0.5rem;
   }
   &[color="primary"] {
-    background: linear-gradient(90deg, $primary-color 0%, $secondary-color 100%);
+    background: linear-gradient(90deg, $primary 0%, $secondary 100%);
+    color: #fff;
+    border: none;
+    &:hover {
+      filter: brightness(1.1);
+    }
+  }
+  &[color="secondary"] {
+    background: $accent;
     color: #fff;
     border: none;
     &:hover {
@@ -137,7 +171,7 @@ const confirmAndDelete = (id) => {
 }
 
 .q-inner-loading {
-  background: rgba($primary-color, 0.08);
+  background: rgba($primary, 0.08);
 }
 
 // Responsive
