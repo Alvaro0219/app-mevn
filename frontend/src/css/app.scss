@@ -1,1 +1,41 @@
 // app global css in SCSS form
+
+// Estilos globales para tablas Quasar
+.q-table {
+  background: $card;
+  border-radius: 12px !important;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+  overflow: hidden;
+  th {
+    background: $sidebar;
+    color: $muted-foreground;
+    font-weight: 600;
+    border-bottom: 1px solid $border;
+    font-size: 1rem;
+    letter-spacing: 0.02em;
+    padding: 14px 10px;
+  }
+  td {
+    color: $foreground;
+    border-bottom: 1px solid $border;
+    font-size: 0.98rem;
+    padding: 12px 10px;
+    vertical-align: middle;
+  }
+  tr {
+    transition: background 0.2s;
+    &:hover {
+      background: rgba($secondary, 0.07);
+    }
+  }
+}
+
+// Responsive para tablas
+@media (max-width: 600px) {
+  .q-table {
+    th, td {
+      font-size: 0.92rem;
+      padding: 8px 4px;
+    }
+  }
+}

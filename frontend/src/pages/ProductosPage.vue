@@ -5,7 +5,7 @@
         <div class="col">
           <h4 class="text-h4 q-my-none">Gestión de Productos</h4>
         </div>
-        <div class="col-auto">
+        <div>
           <q-btn
             outline
             color="primary"
@@ -507,77 +507,5 @@ export default {
 }
 .gradient-success {
   background: linear-gradient(135deg, $positive 0%, $primary 100%);
-}
-
-.q-table {
-  background: $card;
-  border-radius: 12px !important;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.04);
-  overflow: hidden;
-  th {
-    background: $sidebar;
-    color: $muted-foreground;
-    font-weight: 600;
-    border-bottom: 1px solid $border;
-    font-size: 1rem;
-    letter-spacing: 0.02em;
-    padding: 14px 10px;
-  }
-  td {
-    color: $foreground;
-    border-bottom: 1px solid $border;
-    font-size: 0.98rem;
-    padding: 12px 10px;
-    vertical-align: middle;
-  }
-  tr {
-    transition: background 0.2s;
-    &:hover {
-      background: rgba($secondary, 0.07);
-    }
-  }
-}
-
-.q-btn {
-  border-radius: 8px;
-  font-weight: 600;
-  transition: all 0.2s;
-  &.q-mr-sm {
-    margin-right: 0.5rem;
-  }
-  &[color="primary"] {
-    background: linear-gradient(90deg, $primary 0%, $secondary 100%);
-    color: #fff;
-    border: none;
-    &:hover {
-      filter: brightness(1.1);
-    }
-  }
-  &[color="secondary"] {
-    background: $accent;
-    color: #fff;
-    border: none;
-    &:hover {
-      filter: brightness(1.1);
-    }
-  }
-  &[color="negative"] {
-    background: $destructive;
-    color: #fff;
-    border: none;
-    &:hover {
-      filter: brightness(1.1);
-    }
-  }
-}
-
-// Responsive
-@media (max-width: 600px) {
-  .q-table {
-    th, td {
-      font-size: 0.92rem;
-      padding: 8px 4px;
-    }
-  }
 }
 </style>

@@ -130,11 +130,50 @@
   };
   </script>
   
-  <style scoped>
+  <style scoped lang="scss">
   .rounded-borders {
-    border-radius: 10px;
+    border-radius: 16px;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.07);
+    background: $card;
+    border: 1px solid $border;
   }
   .q-card-section {
-    padding: 16px;
+    padding: 20px;
+  }
+  .q-list {
+    background: transparent;
+    border-radius: 10px;
+    box-shadow: none;
+  }
+  .q-item-label.text-primary.text-h6 {
+    font-size: 1.2rem;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+  }
+  .text-subtitle1 {
+    font-size: 1.1rem;
+    font-weight: 500;
+    color: $foreground;
+  }
+  .q-banner {
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+  }
+  .q-btn {
+    border-radius: 8px;
+    font-weight: 600;
+    transition: all 0.2s;
+    &[color="primary"] {
+      background: linear-gradient(90deg, $primary 0%, $secondary 100%);
+      color: #fff;
+      border: none;
+      &:hover {
+        filter: brightness(1.1);
+      }
+    }
+  }
+  .q-img {
+    border-radius: 16px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.04);
   }
   </style>

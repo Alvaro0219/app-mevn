@@ -56,7 +56,7 @@ const columns = [
   { name: 'username', label: 'Usuario', field: 'username', align: 'left', sortable: true },
   { name: 'email', label: 'Email', field: 'email', align: 'left', sortable: true },
   { name: 'role', label: 'Rol', field: 'role', align: 'left', sortable: true },
-  { name: 'isActive', label: 'Activo', field: row => row.isActive ? 'Sí' : 'No', align: 'center' },
+  { name: 'isActive', label: 'Estado', field: row => row.isActive ? 'Sí' : 'No', align: 'center' },
   { name: 'actions', label: 'Acciones', align: 'center' }
 ]
 
@@ -84,52 +84,6 @@ const confirmAndDelete = (id) => {
 </script>
 
 <style scoped lang="scss">
-// Variables modernas de Quasar
-$primary-color: $primary;
-$secondary-color: $secondary;
-$text-primary: $foreground;
-$text-secondary: $muted-foreground;
-$bg-light: $sidebar;
-$bg-lighter: $card;
-$border-color: $border;
-$radius: $radius;
-
-.q-card {
-  border-radius: 16px;
-  box-shadow: 0 4px 16px rgba(0,0,0,0.07);
-  background: $bg-light;
-  border: 1px solid $border-color;
-  margin-bottom: 2rem;
-}
-
-.q-table {
-  background: $card;
-  border-radius: 12px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.04);
-  th {
-    background: $bg-lighter;
-    color: $text-secondary;
-    font-weight: 600;
-    border-bottom: 1px solid $border-color;
-    font-size: 1rem;
-    letter-spacing: 0.02em;
-    padding: 14px 10px;
-  }
-  td {
-    color: $text-primary;
-    border-bottom: 1px solid $border-color;
-    font-size: 0.98rem;
-    padding: 12px 10px;
-    vertical-align: middle;
-  }
-  tr {
-    transition: background 0.2s;
-    &:hover {
-      background: rgba($secondary, 0.07);
-    }
-  }
-}
-
 // Badge para estado
 .status-badge {
   display: inline-block;
