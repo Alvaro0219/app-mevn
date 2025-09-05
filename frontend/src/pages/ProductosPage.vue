@@ -54,43 +54,73 @@
         </div>
       </div>
 
-      <q-table
-        :rows="products"
-        :columns="columns"
-        row-key="_id"
-        :loading="loading"
-        v-model:pagination="pagination"
-        @request="onRequest"
-        :rows-per-page-options="[5, 10, 15, 20]"
-      >
-        <template v-slot:body-cell-actions="props">
-          <q-td :props="props">
-            <q-btn
-              flat
-              round
-              color="secondary"
-              icon="visibility"
-              @click="viewProduct(props.row._id)"
-              class="q-mr-sm"
-            />
-            <q-btn
-              flat
-              round
-              color="primary"
-              icon="edit"
-              @click="editProduct(props.row)"
-              class="q-mr-sm"
-            />
-            <q-btn
-              flat
-              round
-              color="negative"
-              icon="delete"
-              @click="confirmDelete(props.row)"
-            />
-          </q-td>
+      <q-card v-if="!isMobile">
+        <q-table
+          :rows="products"
+          :columns="columns"
+          row-key="_id"
+          :loading="loading"
+          v-model:pagination="pagination"
+          @request="onRequest"
+          :rows-per-page-options="[5, 10, 15, 20]"
+        >
+          <template v-slot:body-cell-actions="props">
+            <q-td :props="props">
+              <q-btn
+                flat
+                round
+                color="secondary"
+                icon="visibility"
+                @click="viewProduct(props.row._id)"
+                class="q-mr-sm"
+              />
+              <q-btn
+                flat
+                round
+                color="primary"
+                icon="edit"
+                @click="editProduct(props.row)"
+                class="q-mr-sm"
+              />
+              <q-btn
+                flat
+                round
+                color="negative"
+                icon="delete"
+                @click="confirmDelete(props.row)"
+              />
+            </q-td>
+          </template>
+        </q-table>
+      </q-card>
+
+      <TableToCards v-else :rows="products" :columns="columns" rowKey="_id">
+        <template #actions="{ row }">
+          <q-btn
+            flat
+            round
+            color="secondary"
+            icon="visibility"
+            @click="viewProduct(row._id)"
+            class="q-mr-sm"
+          />
+          <q-btn
+            flat
+            round
+            color="primary"
+            icon="edit"
+            @click="editProduct(row)"
+            class="q-mr-sm"
+          />
+          <q-btn
+            flat
+            round
+            color="negative"
+            icon="delete"
+            @click="confirmDelete(row)"
+          />
         </template>
-      </q-table>
+      </TableToCards>
     </div>
 
     <q-dialog v-model="showDialog">
@@ -231,10 +261,11 @@ import { ref, onMounted, computed } from 'vue';
 import { useQuasar } from 'quasar';
 import { useProducts } from 'src/composables/useProducts';
 import { useRouter } from 'vue-router';
+import TableToCards from 'src/components/TableToCards.vue';
 
 export default {
   name: 'ProductosPage',
-
+  components: { TableToCards },
   setup() {
     const $q = useQuasar();
     const router = useRouter();
@@ -252,6 +283,7 @@ export default {
     const editingProduct = ref(null);
     const productToDelete = ref(null);
     const imagePreview = ref('');
+    const isMobile = ref(false);
 
     const formData = ref({
       name: '',
@@ -450,7 +482,13 @@ export default {
     // Cargar los productos al montar el componente
     onMounted(() => {
       loadProducts();
+      updateIsMobile();
+      window.addEventListener('resize', updateIsMobile);
     });
+
+    function updateIsMobile() {
+      isMobile.value = window.innerWidth <= 600;
+    }
 
     return {
       // State
@@ -465,6 +503,7 @@ export default {
       pagination,
       lowStockCount,
       totalInventoryValue,
+      isMobile,
       // Methods
       onRequest,
       openCreateDialog,

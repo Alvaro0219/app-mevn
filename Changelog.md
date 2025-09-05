@@ -1,5 +1,38 @@
 # Changelog y guía de comunicación (MEVN + Quasar)
 
+## 2025-09-05 — Modernización UI/UX y Responsive Tables
+
+### Frontend
+
+- **Migración y unificación de estilos globales**
+  - Se crearon y centralizaron variables SCSS en `quasar.variables.scss` y estilos globales en `app.scss` para colores, bordes, sombras y botones.
+  - Se actualizaron los estilos de tablas y botones para una apariencia moderna y consistente en todo el sistema.
+
+- **Componente global TableToCards**
+  - Nuevo componente `frontend/src/components/TableToCards.vue` que permite renderizar datos de tabla como tarjetas en dispositivos móviles.
+  - Soporte para slots personalizados por columna y acciones.
+  - Estilos responsivos y visuales adaptados a la UI profesional.
+
+- **Integración TableToCards en páginas clave**
+  - `UsersPage.vue` y `ProductosPage.vue` ahora muestran tablas en desktop y tarjetas en mobile usando TableToCards.
+  - Lógica de detección de dispositivo y renderizado condicional.
+  - Acciones (editar, eliminar, ver) disponibles en ambos modos.
+
+- **Badges visuales para estado y rol**
+  - Se implementaron badges para visualizar el estado (activo/inactivo) y el rol (admin/usuario) en UsersPage y TableToCards.
+  - Colores y estilos unificados para una mejor experiencia visual.
+
+- **Optimización de experiencia responsiva**
+  - Media queries y reglas SCSS para mejorar la visualización en dispositivos móviles.
+  - Tarjetas y tablas adaptadas para legibilidad y usabilidad.
+
+### Backend
+
+- **Fix en middleware de autenticación**
+  - Se corrigió el error de token agregando `cookie-parser` en `server.js` para el manejo correcto de autenticación JWT.
+
+---
+
 Este documento explica de forma sencilla cómo funcionan y se relacionan los archivos que vamos modificando. Sirve como guía rápida del stack.
 
 ## 2025-09-02 — Integración de Cloudinary para Gestión de Imágenes

@@ -5,7 +5,7 @@
       <q-btn label="Registrar Usuario" :to="{ name: 'usuarios-registrar' }" outline color="primary" no-caps icon="add"/>
     </div>
 
-    <q-card>
+    <q-card v-if="!isMobile">
       <q-table
         :rows="users"
         :columns="columns"
@@ -13,7 +13,13 @@
         :loading="loading"
         flat
       >
-
+        <template v-slot:body-cell-role="props">
+          <q-td :props="props">
+            <span :class="['role-badge', props.row.role]">
+              {{ props.row.role === 'admin' ? 'Administrador' : 'Usuario' }}
+            </span>
+          </q-td>
+        </template>
         <template v-slot:body-cell-isActive="props">
           <q-td :props="props">
             <span :class="['status-badge', props.row.isActive ? 'active' : 'inactive']">
@@ -21,15 +27,6 @@
             </span>
           </q-td>
         </template>
-
-        <template v-slot:body-cell-role="props">
-          <q-td :props="props">
-            <span :class="['role-badge', props.row.role]">
-              {{ props.row.role === 'admin' ? 'admin' : 'user' }}
-            </span>
-          </q-td>
-        </template>
-
         <template v-slot:body-cell-actions="props">
           <q-td :props="props">
             <q-btn dense flat icon="edit" color="primary" class="q-mr-sm"
@@ -38,7 +35,6 @@
               @click="confirmAndDelete(props.row._id)" />
           </q-td>
         </template>
-
         <template v-slot:loading>
           <q-inner-loading showing>
             <q-spinner color="primary" size="50px" />
@@ -47,6 +43,25 @@
       </q-table>
     </q-card>
 
+    <TableToCards v-else :rows="users" :columns="columns" rowKey="_id">
+      <template #cell-role="{ row }">
+        <span :class="['role-badge', row.role]">
+          {{ row.role === 'admin' ? 'Administrador' : 'Usuario' }}
+        </span>
+      </template>
+      <template #cell-isActive="{ row }">
+        <span :class="['status-badge', row.isActive ? 'active' : 'inactive']">
+          {{ row.isActive ? 'Activo' : 'Inactivo' }}
+        </span>
+      </template>
+      <template #actions="{ row }">
+        <q-btn dense flat icon="edit" color="primary" class="q-mr-sm"
+          :to="{ name: 'usuarios-editar', params: { id: row._id } }" />
+        <q-btn dense flat icon="delete" color="negative" 
+          @click="confirmAndDelete(row._id)" />
+      </template>
+    </TableToCards>
+
     <div v-if="error" class="text-negative q-mt-md">
       {{ error }}
     </div>
@@ -54,12 +69,14 @@
 </template>
 
 <script setup>
-import { onMounted } from 'vue'
+import { onMounted, ref } from 'vue'
 import { useQuasar } from 'quasar'
 import useUsers from 'src/composables/useUsers.js'
+import TableToCards from 'src/components/TableToCards.vue'
 
 const $q = useQuasar()
 const { users, loading, error, fetchUsers, deleteUser } = useUsers()
+const isMobile = ref(false)
 
 const columns = [
   { name: 'username', label: 'Usuario', field: 'username', align: 'left', sortable: true },
@@ -71,7 +88,13 @@ const columns = [
 
 onMounted(() => {
   fetchUsers()
+  updateIsMobile()
+  window.addEventListener('resize', updateIsMobile)
 })
+
+function updateIsMobile() {
+  isMobile.value = window.innerWidth <= 600
+}
 
 // Confirmacion de eliminacion de usuario
 const confirmAndDelete = (id) => {
@@ -81,15 +104,14 @@ const confirmAndDelete = (id) => {
     cancel: true,
     persistent: true
   }).onOk(async () => {
-  try {
-    await deleteUser(id)
-    $q.notify({ type: 'positive', message: 'Usuario eliminado' })
-  } catch (e) {
-    $q.notify({ type: 'negative', message: error.value || e.message || 'Error eliminando' })
-  }
-})
+    try {
+      await deleteUser(id)
+      $q.notify({ type: 'positive', message: 'Usuario eliminado' })
+    } catch (e) {
+      $q.notify({ type: 'negative', message: error.value || e.message || 'Error eliminando' })
+    }
+  })
 }
-
 </script>
 
 <style scoped lang="scss">
