@@ -54,6 +54,11 @@ const routes = [
         path: 'config', 
         name: 'config',
         component: () => import('pages/ConfigPage.vue')
+      },
+      {
+        path: 'ventas',
+        name: 'ventas',
+        component: () => import('pages/SalesPage.vue')
       }
     ]
   },

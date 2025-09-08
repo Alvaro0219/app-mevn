@@ -84,6 +84,21 @@
                   <q-item-label class="nav-label">Productos</q-item-label>
                 </q-item-section>
               </q-item>
+
+              <q-item
+                clickable
+                :to="'/ventas'"
+                :active="isActive('/ventas')"
+                class="nav-item"
+                active-class="nav-item--active"
+              >
+                <q-item-section avatar>
+                  <q-icon name="point_of_sale" class="nav-icon" />
+                </q-item-section>
+                <q-item-section>
+                  <q-item-label class="nav-label">Ventas</q-item-label>
+                </q-item-section>
+              </q-item>
             </q-list>
           </div>
 

@@ -5,6 +5,7 @@ import dotenv from 'dotenv';
 import userRoutes from './routes/userRoutes.js';
 import authRoutes from './routes/authRoutes.js';
 import productRoutes from './routes/productRoutes.js';
+import saleRoutes from './routes/saleRoutes.js';
 import connectDB from './config/db.js';
 import cookieParser from 'cookie-parser';
 
@@ -33,6 +34,9 @@ app.use('/auth', authRoutes);
 
 // Rutas de productos
 app.use('/products', productRoutes);
+
+// Rutas de ventas
+app.use('/api/sales', saleRoutes);
 
 // Escuchar puerto
 const PORT = process.env.PORT || 5000;

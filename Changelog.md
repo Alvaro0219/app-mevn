@@ -1,5 +1,36 @@
 # Changelog y guía de comunicación (MEVN + Quasar)
 
+## 2025-09-08 — Módulo de Ventas Internas
+
+### Backend
+
+- **Modelo de ventas**
+  - Nuevo archivo `backend/src/models/Sale.js` con esquema para ventas: productos vendidos, cantidad, total, fecha, vendedor, observaciones.
+- **Controlador de ventas**
+  - Nuevo archivo `backend/src/controllers/saleController.js` con funciones para registrar venta (actualiza stock), listar ventas y ver detalle.
+- **Rutas protegidas de ventas**
+  - Nuevo archivo `backend/src/routes/saleRoutes.js` con rutas POST (registrar), GET (listar), GET/:id (detalle), protegidas con middleware `protect`.
+- **Integración en el servidor**
+  - Rutas montadas en `/api/sales` en `backend/src/server.js`.
+- **Unificación de imports/exports**
+  - Todo el módulo de ventas usa ES Modules (`import/export`) igual que el resto del backend.
+
+### Frontend
+
+- **Composable de ventas**
+  - Nuevo archivo `frontend/src/composables/useSales.js` para registrar ventas, obtener listado y detalle.
+- **Página de ventas**
+  - Nuevo archivo `frontend/src/pages/SalesPage.vue` con formulario para registrar venta (selección de productos, cantidades, observaciones) y tabla para listar ventas.
+- **Ruta y menú de ventas**
+  - Se agregó la ruta `/ventas` en el router (`frontend/src/router/routes.js`).
+  - Se agregó la sección Ventas en la barra lateral del menú principal (`frontend/src/layouts/MainLayout.vue`).
+- **Validaciones y feedback**
+  - Validación de selección y cantidad de productos, notificaciones de éxito/error.
+- **Estilos y experiencia unificada**
+  - Estilos modernos y consistentes con el resto del sistema.
+
+---
+
 ## 2025-09-05 — Modernización UI/UX y Responsive Tables
 
 ### Frontend
