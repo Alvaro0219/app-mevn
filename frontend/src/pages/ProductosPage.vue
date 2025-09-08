@@ -6,6 +6,19 @@
           <h4 class="text-h4 q-my-none">Gestión de Productos</h4>
         </div>
         <div>
+          <q-input
+            v-model="search"
+            placeholder="Buscar producto..."
+            dense
+            outlined
+            clearable
+            debounce="300"
+            class="search-input"
+          >
+            <template v-slot:append>
+              <q-icon name="search" />
+            </template>
+          </q-input>
           <q-btn
             outline
             color="primary"
@@ -56,7 +69,7 @@
 
       <q-card v-if="!isMobile">
         <q-table
-          :rows="products"
+          :rows="filteredProducts"
           :columns="columns"
           row-key="_id"
           :loading="loading"
@@ -250,7 +263,7 @@
 </template>
 
 <script>
-import { ref, onMounted, computed } from 'vue';
+import { ref, computed, onMounted } from 'vue';
 import { useQuasar } from 'quasar';
 import { useProducts } from 'src/composables/useProducts';
 import { useRouter } from 'vue-router';
@@ -277,6 +290,7 @@ export default {
     const productToDelete = ref(null);
     const imagePreview = ref('');
     const isMobile = ref(false);
+    const search = ref('');
 
     const formData = ref({
       name: '',
@@ -326,6 +340,13 @@ export default {
       page: 1,
       rowsPerPage: 10,
       rowsNumber: 0
+    });
+
+    const filteredProducts = computed(() => {
+      if (!search.value) return products.value;
+      return products.value.filter(p =>
+        p.name.toLowerCase().includes(search.value.toLowerCase())
+      );
     });
 
     const loadProducts = async () => {
@@ -497,6 +518,8 @@ export default {
       lowStockCount,
       totalInventoryValue,
       isMobile,
+      search,
+      filteredProducts,
       // Methods
       onRequest,
       openCreateDialog,

@@ -2,6 +2,13 @@
 
 ## 2025-09-08 — Módulo de Ventas Internas
 
+### Mejoras en Productos
+
+- **Buscador de productos por nombre**
+  - Se agregó un campo de búsqueda moderno en `frontend/src/pages/ProductosPage.vue` usando `q-input` y filtrado reactivo.
+  - Permite filtrar productos por nombre en tiempo real, con ícono y estilos globales.
+  - Mejora la experiencia de usuario y la gestión visual de productos.
+
 ### Backend
 
 - **Modelo de ventas**
