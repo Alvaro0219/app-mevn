@@ -240,16 +240,9 @@
           <q-avatar icon="warning" color="warning" text-color="white" />
           <span class="q-ml-sm">¿Estás seguro de que deseas eliminar este producto?</span>
         </q-card-section>
-
         <q-card-actions align="right">
-          <q-btn flat label="Cancelar" color="primary" v-close-popup />
-          <q-btn
-            flat
-            label="Eliminar"
-            color="negative"
-            @click="deleteProduct"
-            :loading="loading"
-          />
+          <q-btn flat label="Cancelar" color="primary" v-close-popup @click="showDeleteDialog = false" />
+          <q-btn flat label="Eliminar" color="negative" @click="deleteProduct" :loading="loading" />
         </q-card-actions>
       </q-card>
     </q-dialog>

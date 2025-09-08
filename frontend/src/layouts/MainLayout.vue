@@ -464,7 +464,8 @@ $border-color: $border;
 
 // Contenedor de páginas
 .page-container {
-  background: linear-gradient(135deg, $bg-light 0%, $bg-lighter 100%);
+  //background: linear-gradient(135deg, $bg-light 0%, $bg-lighter 100%);
+  background-color: #ffffff;
   min-height: 100vh;
 }
 

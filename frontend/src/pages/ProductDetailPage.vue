@@ -118,9 +118,10 @@
   });
   
   const formatPrice = (value) => {
-    return new Intl.NumberFormat('es-ES', {
+    return new Intl.NumberFormat('es-AR', {
       style: 'currency',
-      currency: 'EUR'
+      currency: 'ARS',
+      minimumFractionDigits: 2
     }).format(value);
   };
   

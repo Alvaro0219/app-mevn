@@ -65,6 +65,19 @@
     <div v-if="error" class="text-negative q-mt-md">
       {{ error }}
     </div>
+
+    <q-dialog v-model="showDeleteDialog">
+      <q-card>
+        <q-card-section class="row items-center">
+          <q-avatar icon="warning" color="warning" text-color="white" />
+          <span class="q-ml-sm">¿Estás seguro de que deseas eliminar este usuario?</span>
+        </q-card-section>
+        <q-card-actions align="right">
+          <q-btn flat label="Cancelar" color="primary" v-close-popup @click="showDeleteDialog = false" />
+          <q-btn flat label="Eliminar" color="negative" @click="deleteUserConfirmed" :loading="loading" />
+        </q-card-actions>
+      </q-card>
+    </q-dialog>
   </q-page>
 </template>
 
@@ -77,6 +90,8 @@ import TableToCards from 'src/components/TableToCards.vue'
 const $q = useQuasar()
 const { users, loading, error, fetchUsers, deleteUser } = useUsers()
 const isMobile = ref(false)
+const showDeleteDialog = ref(false);
+const userToDelete = ref(null);
 
 const columns = [
   { name: 'username', label: 'Usuario', field: 'username', align: 'left', sortable: true },
@@ -98,20 +113,20 @@ function updateIsMobile() {
 
 // Confirmacion de eliminacion de usuario
 const confirmAndDelete = (id) => {
-  $q.dialog({
-    title: 'Confirmar',
-    message: '¿Eliminar este usuario?',
-    cancel: true,
-    persistent: true
-  }).onOk(async () => {
-    try {
-      await deleteUser(id)
-      $q.notify({ type: 'positive', message: 'Usuario eliminado' })
-    } catch (e) {
-      $q.notify({ type: 'negative', message: error.value || e.message || 'Error eliminando' })
-    }
-  })
-}
+  userToDelete.value = id;
+  showDeleteDialog.value = true;
+};
+
+const deleteUserConfirmed = async () => {
+  try {
+    await deleteUser(userToDelete.value);
+    $q.notify({ type: 'positive', message: 'Usuario eliminado correctamente' });
+    showDeleteDialog.value = false;
+    userToDelete.value = null;
+  } catch (e) {
+    $q.notify({ type: 'negative', message: error.value || e.message || 'Error eliminando' });
+  }
+};
 </script>
 
 <style scoped lang="scss">
