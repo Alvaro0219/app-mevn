@@ -2,47 +2,13 @@
   <q-page padding>
     <div class="row q-mb-md items-center">
       <div class="col">
-        <h4 class="text-h4 q-my-none">Registro de Ventas</h4>
+        <h4 class="text-h4 q-my-none">Ventas</h4>
       </div>
       <div>
-        <q-btn outline color="primary" icon="refresh" label="Actualizar" @click="fetchSales" />
+        <q-btn outline color="primary" icon="add" label="Registrar Venta" @click="showDialog = true" />
+        <q-btn outline color="primary" icon="refresh" label="Actualizar" @click="fetchSales" class="q-ml-sm" />
       </div>
     </div>
-
-    <q-card class="q-mb-lg">
-      <q-card-section>
-        <h6 class="text-h6">Registrar nueva venta</h6>
-        <q-form @submit.prevent="handleSubmit">
-          <q-select
-            v-model="selectedProducts"
-            :options="productOptions"
-            label="Productos"
-            multiple
-            emit-value
-            map-options
-            option-value="_id"
-            option-label="name"
-            use-chips
-            :disable="loadingProducts"
-            @update:model-value="updateQuantities"
-          />
-          <div v-for="item in selectedProducts" :key="item">
-            <q-input
-              v-model.number="quantities[item]"
-              type="number"
-              min="1"
-              :label="`Cantidad para ${getProductName(item)}`"
-              :disable="loadingProducts"
-              class="q-mb-sm"
-            />
-          </div>
-          <q-input v-model="notes" label="Observaciones" type="textarea" class="q-mb-sm" />
-          <div class="text-right q-mt-md">
-            <q-btn type="submit" color="primary" label="Registrar Venta" :loading="loading" />
-          </div>
-        </q-form>
-      </q-card-section>
-    </q-card>
 
     <q-card>
       <q-card-section>
@@ -70,6 +36,46 @@
         </q-table>
       </q-card-section>
     </q-card>
+
+    <q-dialog v-model="showDialog">
+      <q-card style="width: 500px; max-width: 90vw;">
+        <q-card-section>
+          <div class="text-h6">Registrar nueva venta</div>
+        </q-card-section>
+        <q-card-section class="q-pt-none">
+          <q-form @submit.prevent="handleSubmit" class="q-gutter-md">
+            <q-select
+              v-model="selectedProducts"
+              :options="productOptions"
+              label="Productos"
+              multiple
+              emit-value
+              map-options
+              option-value="_id"
+              option-label="name"
+              use-chips
+              :disable="loadingProducts"
+              @update:model-value="updateQuantities"
+            />
+            <div v-for="item in selectedProducts" :key="item">
+              <q-input
+                v-model.number="quantities[item]"
+                type="number"
+                min="1"
+                :label="`Cantidad para ${getProductName(item)}`"
+                :disable="loadingProducts"
+                class="q-mb-sm"
+              />
+            </div>
+            <q-input v-model="notes" label="Observaciones" type="textarea" class="q-mb-sm" />
+            <div class="row justify-end q-gutter-sm q-mt-md">
+              <q-btn label="Cancelar" color="negative" flat @click="showDialog = false" :disable="loading" />
+              <q-btn type="submit" label="Registrar Venta" color="primary" :loading="loading" />
+            </div>
+          </q-form>
+        </q-card-section>
+      </q-card>
+    </q-dialog>
   </q-page>
 </template>
 
@@ -83,6 +89,7 @@ const $q = useQuasar();
 const { sales, loading, error, fetchSales, createSale } = useSales();
 const { products, fetchProducts, loading: loadingProducts } = useProducts();
 
+const showDialog = ref(false);
 const selectedProducts = ref([]);
 const quantities = ref({});
 const notes = ref('');
@@ -134,6 +141,7 @@ async function handleSubmit() {
     selectedProducts.value = [];
     quantities.value = {};
     notes.value = '';
+    showDialog.value = false;
     fetchSales();
   } catch (e) {
     $q.notify({ type: 'negative', message: error.value || e.message });

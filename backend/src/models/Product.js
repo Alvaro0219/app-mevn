@@ -8,6 +8,13 @@ const productSchema = new mongoose.Schema({
     trim: true,
     maxlength: [100, 'El nombre no puede tener más de 100 caracteres']
   },
+  code: {
+    type: String,
+    required: [true, 'El código del producto es requerido'],
+    unique: true,
+    trim: true,
+    maxlength: [50, 'El código no puede tener más de 50 caracteres']
+  },
   description: {
     type: String,
     required: [true, 'La descripción es requerida'],

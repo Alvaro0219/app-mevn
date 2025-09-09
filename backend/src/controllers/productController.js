@@ -48,9 +48,9 @@ const getProductById = async (req, res) => {
 // Create new product
 async function createProduct(req, res) {
   try {
-    const { name, description, price, stock, category } = req.body;
+    const { name, code, description, price, stock, category } = req.body;
 
-    if (!name || !description || price === undefined || stock === undefined || !category) {
+    if (!name || !code || !description || price === undefined || stock === undefined || !category) {
       return res.status(400).json({ message: 'Todos los campos son requeridos' });
     }
 
@@ -60,6 +60,7 @@ async function createProduct(req, res) {
 
     const productData = {
       name: name.trim(),
+      code: code.trim(),
       description: description.trim(),
       price: parseFloat(price),
       stock: parseInt(stock, 10),
@@ -85,10 +86,10 @@ async function createProduct(req, res) {
 // Update product
 const updateProduct = async (req, res) => {
   try {
-    const { name, description, price, stock, category, active } = req.body;
+    const { name, code, description, price, stock, category, active } = req.body;
     const updateData = {};
-    
     if (name) updateData.name = name.trim();
+    if (code) updateData.code = code.trim();
     if (description) updateData.description = description.trim();
     if (price !== undefined) updateData.price = parseFloat(price);
     if (stock !== undefined) updateData.stock = parseInt(stock, 10);
@@ -101,17 +102,14 @@ const updateProduct = async (req, res) => {
       }
       updateData.image = req.file.path;
     }
-    
     const updatedProduct = await Product.findByIdAndUpdate(
       req.params.id,
       updateData,
       { new: true, runValidators: true }
     );
-    
     if (!updatedProduct) {
       return res.status(404).json({ message: 'Producto no encontrado' });
     }
-    
     res.json({
       message: 'Producto actualizado exitosamente',
       product: updatedProduct

@@ -23,7 +23,7 @@
   
       <div class="row q-col-gutter-lg" v-else-if="product">
         <div class="col-12 text-center">
-          <h4 class="text-h4 q-my-none text-primary">{{ product.name }}</h4>
+          <h4 class="text-h4 q-my-none text-primary">{{ product.code }} - {{ product.name }}</h4>
         </div>
         <div class="col-12 col-md-6">
           <q-card flat bordered class="rounded-borders">

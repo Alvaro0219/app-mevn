@@ -153,6 +153,14 @@
             />
 
             <q-input
+              v-model="formData.code"
+              label="Código"
+              :rules="[val => !!val || 'El código es requerido']"
+              outlined
+              dense
+            />
+
+            <q-input
               v-model="formData.description"
               label="Descripción"
               type="textarea"
@@ -294,6 +302,7 @@ export default {
 
     const formData = ref({
       name: '',
+      code: '',
       description: '',
       price: 0,
       stock: 0,
@@ -326,6 +335,7 @@ export default {
     };
 
     const columns = [
+      { name: 'code', label: 'Código', field: 'code', align: 'left', sortable: true },
       { name: 'name', label: 'Nombre', field: 'name', align: 'left', sortable: true },
       { name: 'description', label: 'Descripción', field: 'description', align: 'left' },
       { name: 'price', label: 'Precio', field: 'price', align: 'right', sortable: true },
@@ -386,6 +396,7 @@ export default {
     const resetForm = () => {
       formData.value = {
         name: '',
+        code: '',
         description: '',
         price: 0,
         stock: 0,
@@ -412,6 +423,7 @@ export default {
       editingProduct.value = product._id;
       formData.value = {
         name: product.name,
+        code: product.code,
         description: product.description,
         price: product.price,
         stock: product.stock,
