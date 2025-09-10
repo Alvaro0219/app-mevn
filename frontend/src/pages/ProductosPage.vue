@@ -38,7 +38,7 @@
               <q-icon name="inventory" size="36px" color="white" class="q-mr-md" />
               <div>
                 <div class="metric-title">Total de productos</div>
-                <div class="metric-value">{{ products.length }}</div>
+                <div class="metric-value">{{ allProducts.length }}</div>
               </div>
             </q-card-section>
           </q-card>
@@ -311,14 +311,16 @@ export default {
       imageUrl: ''
     });
 
+    const allProducts = ref([]);
+
     // Métrica: productos con stock bajo (por ejemplo, stock < 5)
     const lowStockCount = computed(() => {
-      return products.value.filter(p => p.stock !== undefined && p.stock < 10).length;
+      return allProducts.value.filter(p => p.stock !== undefined && p.stock < 10).length;
     });
 
     // Métrica: valor total en inventario
     const totalInventoryValue = computed(() => {
-      return products.value.reduce((acc, p) => acc + (p.price * (p.stock || 0)), 0).toFixed(2);
+      return allProducts.value.reduce((acc, p) => acc + (p.price * (p.stock || 0)), 0).toFixed(2);
     });
 
     // Handle file selection
@@ -358,6 +360,20 @@ export default {
         p.name.toLowerCase().includes(search.value.toLowerCase())
       );
     });
+
+    const fetchAllProducts = async () => {
+      try {
+        // Obtener todos los productos sin paginación
+        const allData = await fetchProducts({});
+        allProducts.value = allData.docs || allData;
+      } catch (err) {
+        $q.notify({
+          type: 'negative',
+          message: err.message || 'Error al cargar todos los productos',
+          position: 'top'
+        });
+      }
+    };
 
     const loadProducts = async () => {
       try {
@@ -508,6 +524,7 @@ export default {
     // Cargar los productos al montar el componente
     onMounted(() => {
       loadProducts();
+      fetchAllProducts();
       updateIsMobile();
       window.addEventListener('resize', updateIsMobile);
     });
@@ -532,6 +549,7 @@ export default {
       isMobile,
       search,
       filteredProducts,
+      allProducts,
       // Methods
       onRequest,
       openCreateDialog,
