@@ -144,7 +144,12 @@ async function handleSubmit() {
     showDialog.value = false;
     fetchSales();
   } catch (e) {
-    $q.notify({ type: 'negative', message: error.value || e.message });
+    // Mejorar manejo de errores para mostrar mensaje de stock insuficiente si existe
+    let msg = error.value || e.message;
+    if (e.response && e.response.data && e.response.data.message) {
+      msg = e.response.data.message;
+    }
+    $q.notify({ type: 'negative', message: msg });
   }
 }
 </script>
