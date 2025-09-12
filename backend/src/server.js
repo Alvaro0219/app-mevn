@@ -6,6 +6,7 @@ import userRoutes from './routes/userRoutes.js';
 import authRoutes from './routes/authRoutes.js';
 import productRoutes from './routes/productRoutes.js';
 import saleRoutes from './routes/saleRoutes.js';
+import dashboardRoutes from './routes/dashboardRoutes.js';
 import connectDB from './config/db.js';
 import cookieParser from 'cookie-parser';
 
@@ -37,6 +38,9 @@ app.use('/products', productRoutes);
 
 // Rutas de ventas
 app.use('/api/sales', saleRoutes);
+
+// Ruta dashboard
+app.use('/api/dashboard', dashboardRoutes);
 
 // Escuchar puerto
 const PORT = process.env.PORT || 5000;

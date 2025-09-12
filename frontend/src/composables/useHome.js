@@ -6,6 +6,9 @@ export function useHome() {
   const loading = ref(false)
   const error = ref(null)
 
+  // Métricas dashboard
+  const dashboardMetrics = ref({})
+
   const fetchHomeData = async () => {
     try {
       loading.value = true
@@ -21,10 +24,27 @@ export function useHome() {
     }
   }
 
+  const fetchDashboardData = async () => {
+    try {
+      loading.value = true
+      error.value = null
+      const { data } = await api.get('/api/dashboard')
+      dashboardMetrics.value = data
+      return data
+    } catch (err) {
+      error.value = err.response?.data?.message || 'Error al cargar métricas del dashboard'
+      throw error.value
+    } finally {
+      loading.value = false
+    }
+  }
+
   return {
     message,
     loading,
     error,
-    fetchHomeData
+    fetchHomeData,
+    dashboardMetrics,
+    fetchDashboardData
   }
 }

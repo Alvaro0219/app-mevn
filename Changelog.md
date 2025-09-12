@@ -1,5 +1,23 @@
 # Changelog y guía de comunicación (MEVN + Quasar)
 
+## 2025-09-12 — Dashboard General del Sistema
+
+### Backend
+
+- **Endpoint de métricas generales**
+  - Nuevo controlador `dashboardController.js` en `backend/src/controllers/` con lógica para calcular usuarios, productos activos, ventas del mes, reportes generados, ventas por mes, productos por categoría, pedidos recientes y productos más vendidos.
+  - Nueva ruta `dashboardRoutes.js` en `backend/src/routes/` con endpoint `GET /api/dashboard`.
+  - Endpoint registrado en `server.js`.
+  - Agregaciones corregidas para mostrar datos reales y completos.
+
+### Frontend
+
+- **Consumo y visualización de métricas**
+  - Actualización de `useHome.js` para consumir `/api/dashboard` y exponer las métricas.
+  - Actualización de `IndexPage.vue` para mostrar métricas generales, pedidos recientes y productos más vendidos con datos reales y adaptados.
+  - Tablas adaptadas para mostrar nombres de productos, cantidades y totales correctamente.
+  - Preparado para integrar gráficos de ventas y categorías.
+
 ## 2025-09-08 — Módulo de Ventas Internas
 
 ### Mejoras en Productos
